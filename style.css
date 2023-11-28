@@ -52,34 +52,35 @@ h6 {
 /* theme */
 
 :root {
+  --text: #000000;
+  --highlight: #ffdeeb;
   --primary: #f06595;
   --primary-hover: #f783ac;
   --primary-active: #e64980;
-  --border: #444444;
+  --border: #dddddd;
   accent-color: var(--primary);
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --highlight: #fff0f633;
+    --text: #ffffff;
+    --border: #444444;
+  }
+}
+
+::selection {
+  background-color: var(--highlight);
+}
+
+:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 body {
-  font-family: system-ui;
-  padding: 40px;
-}
-
-h2 {
-  margin: 2rem 0;
-}
-
-h3 {
-  margin: 1rem 0;
-}
-
-h2::after {
-  content: "";
-  display: block;
-  border-bottom: 1px solid var(--border);
-}
-
-p {
-  margin: 1rem 0;
+  color: var(--text);
+  font-family: ui-rounded, system-ui, sans-serif;
 }
 
 a {
@@ -94,17 +95,61 @@ a:active {
   color: var(--primary-active);
 }
 
-:focus {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
+p {
+  margin: 1rem 0;
+}
+
+h2 {
+  margin: 4rem 0 2rem;
+}
+
+h3 {
+  margin: 4rem 0 1rem;
+}
+
+h2 a,
+h3 a {
+  position: relative;
+  color: var(--text);
+  text-decoration: none;
+}
+
+h2 a:hover,
+h3 a:hover {
+  color: var(--text);
+}
+
+h2 a[href^="#"]:hover::before,
+h3 a[href^="#"]:hover::before {
+  content: "⚓️";
+  font-size: 0.75em;
+  display: block;
+  position: absolute;
+  left: -0.5rem;
+  top: 50%;
+  translate: -100% -50%;
+  margin-top: 0.0625em;
+}
+
+h2::after {
+  content: "";
+  display: block;
+  border-bottom: 1px solid var(--border);
+}
+
+ul {
+  padding-left: 1.5em;
 }
 
 button {
-  padding: 4px 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
   border: 0;
-  font-weight: bold;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: var(--primary);
+  color: #fff;
 }
 
 button:hover {
@@ -117,19 +162,26 @@ button:active {
 
 input {
   width: 100%;
+  border: none;
 }
 
-pre code {
-  white-space: pre-line;
-}
-
-.menu {
-  display: flex;
-  gap: 8px;
-  list-style: none;
-  padding: 8px;
+details {
+  margin: 1rem 0;
+  padding: 16px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 12px;
+}
+
+summary {
+  margin: -16px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: default;
+}
+
+details[open] summary {
+  margin-bottom: 0.5rem;
 }
 
 table {
@@ -139,30 +191,14 @@ table {
 
 th,
 td {
-  position: relative;
-  padding: 4px 8px;
-  border: 1px solid var(--border);
-}
-
-td:focus,
-td:has(:focus) {
-  z-index: 1;
-}
-
-td:has(input) {
-  padding: 0;
-}
-
-.attributes td,
-.attributes th {
   padding: 8px 16px;
+  text-align: left;
+}
+
+td {
+  border: 1px solid var(--border);
   border-left: 0;
   border-right: 0;
-}
-
-.attributes th {
-  border: 0;
-  text-align: left;
 }
 
 /* layout */
@@ -170,4 +206,69 @@ td:has(input) {
 .content {
   max-width: 60rem;
   margin: 0 auto;
+  padding: 40px;
+}
+
+.version {
+  font-size: 1rem;
+  font-family: ui-monospace;
+  opacity: 0.5;
+}
+
+.menu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+/* spreadsheet */
+
+#spreadsheet {
+  font-size: 0.75em;
+}
+
+#spreadsheet .hidden {
+  display: none;
+}
+
+#spreadsheet th,
+#spreadsheet td {
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+}
+
+#spreadsheet th {
+  text-align: center;
+  background-color: #eeeeee;
+}
+
+@media (prefers-color-scheme: dark) {
+  #spreadsheet th {
+    background-color: transparent;
+  }
+}
+
+#spreadsheet td {
+  position: relative;
+}
+
+#spreadsheet label {
+  outline-offset: 0;
+}
+
+#spreadsheet label,
+#spreadsheet input {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 2px 4px;
 }

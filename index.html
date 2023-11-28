@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="utf-8" />
     <title>Roving tabindex</title>
     <meta name="color-scheme" content="light dark" />
     <link rel="stylesheet" href="/style.css" />
@@ -8,8 +9,8 @@
   </head>
   <body>
     <div class="content">
-      <h1>Roving tabindex</h1>
-      <span><code>&lt;roving-tabindex&gt;</code></p>
+      <h1>Roving tabindex <span class="version">0.1.0</span></h1>
+      <span><code>&lt;roving-tabindex&gt;</code></span>
 
       <p>
         A simple <a href="https://adactio.com/journal/20618">HTML web component</a> that implements
@@ -21,139 +22,366 @@
       </p>
       <p>
         Wrap it around some markup and give it a selector to determine which descendants become
-        selectable.
+        selectable!
       </p>
 
-      <roving-tabindex selector="button" direction="horizontal">
+      <roving-tabindex selector="button">
         <ul class="menu">
-          <li><button>One</button></li>
-          <li><button>Two</button></li>
-          <li><button>Three</button></li>
+          <li>
+            <button>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="4" cy="13" r="2.5" />
+                  <circle cx="12" cy="13" r="2.5" />
+                  <path d="M5.741 11.206 13.5.5M10.259 11.206 2.5.5" />
+                </g>
+              </svg>
+              Cut
+            </button>
+          </li>
+          <li>
+            <button>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2.5 3.5h10v12h-10z" />
+                  <path d="M4.5.5h11v13M5.5 6.5h4M5.5 9.5h4M5.5 12.5h4" />
+                </g>
+              </svg>
+              Copy
+            </button>
+          </li>
+          <li>
+            <button>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
+                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                  <path
+                    d="M12.5 1.5h1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-12a1 1 0 0 1 1-1h1"
+                  />
+                  <path d="M5.5.5h5v2h-5zM4.5 6.5h7M4.5 9.5h7M4.5 12.5h7" />
+                </g></svg
+              >Paste
+            </button>
+          </li>
         </ul>
       </roving-tabindex>
 
       <details>
         <summary>Source</summary>
-        <pre>
-          <code>
-            &lt;roving-tabindex selector="button" direction="horziontal"&gt;
-              &lt;ul&gt;
-                &lt;li&gt;&lt;button&gt;One&lt;/button&gt;&lt;/li&gt;
-                &lt;li&gt;&lt;button&gt;Two&lt;/button&gt;&lt;/li&gt;
-                &lt;li&gt;&lt;button&gt;Three&lt;/button&gt;&lt;/li&gt;
-              &lt;/ul&gt;
-            &lt;/roving-tabindex&gt;
-          </code>
-        </pre>
+        <pre><code>&lt;roving-tabindex selector="button"&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;button&gt;One&lt;/button&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;button&gt;Two&lt;/button&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;button&gt;Three&lt;/button&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/roving-tabindex&gt;</code></pre>
       </details>
 
-      <h2>Examples</h2>
+      <h2 id="installation"><a href="#installation">Installation</a></h2>
 
-      <h3>Menu Bar</h3>
-      <roving-tabindex selector="button" direction="horizontal">
-        <ul class="menu">
-          <li><button>One</button></li>
-          <li><button>Two</button></li>
-          <li><button>Three</button></li>
-          <li><button>Four</button></li>
-          <li><button>Five</button></li>
-        </ul>
-      </roving-tabindex>
-
-      <details>
-        <summary>Source</summary>
-        <pre>
-          <code>
-            &lt;roving-tabindex selector="button" direction="horziontal"&gt;
-              &lt;ul&gt;
-                &lt;li&gt;&lt;button&gt;One&lt;/button&gt;&lt;/li&gt;
-                &lt;li&gt;&lt;button&gt;Two&lt;/button&gt;&lt;/li&gt;
-                &lt;li&gt;&lt;button&gt;Three&lt;/button&gt;&lt;/li&gt;
-                &lt;li&gt;&lt;button&gt;Four&lt;/button&gt;&lt;/li&gt;
-                &lt;li&gt;&lt;button&gt;Five&lt;/button&gt;&lt;/li&gt;
-              &lt;/ul&gt;
-            &lt;/roving-tabindex&gt;
-          </code>
-        </pre>
-      </details>
-
-      <h3>Spreadsheet</h3>
       <p>
-        Using roving tabindex with a table of input elements can replicate a spreadsheet interface.
-        Strategically stopping keydown event propagation tktktk.
+        There's no installation process; simply download
+        <a target="_blank" href="/rovingtabindex-0.1.0.js"><code>roving-tabindex-0.1.0.js</code></a>
+        and link to it on your page.
       </p>
-      <roving-tabindex selector="input" direction="grid" columns="5">
+
+      <pre><code>&lt;script type="module" src="/rovingtabindex-0.1.0.js"&gt;&lt;script/&gt;</code></pre>
+
+      <h2 id="examples"><a href="#examples">Examples</a></h2>
+
+      <h3 id="examples-menu-bar"><a href="#examples-menu-bar">Menu Bar</a></h3>
+      <p>
+        The simplest use of <code>&lt;roving-tabindex&gt;</code> is to make a one dimensional list
+        of buttons or links navigable with arrow keys.
+      </p>
+      <p>
+        By default, the left/up and right/down arrow keys move forward and backward in the list,
+        respectively, but you can set the <code>direction</code> attribute to
+        <code>"horizontal"</code> or <code>"vertical"</code> to use only one dimension.
+      </p>
+
+      <roving-tabindex selector="button, a" direction="horizontal">
+        <ul class="menu">
+          <li><button>One</button></li>
+          <li><button>Two</button></li>
+          <li><button>Three</button></li>
+          <li><a href="#">Link</a></li>
+        </ul>
+      </roving-tabindex>
+
+      <details>
+        <summary>Source</summary>
+        <pre><code>&lt;roving-tabindex selector="button" direction="horziontal"&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;button&gt;One&lt;/button&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;button&gt;Two&lt;/button&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;button&gt;Three&lt;/button&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Link&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/roving-tabindex&gt;</code></pre>
+      </details>
+
+      <p>
+        This works especially well as <span role="img">✨</span> progressive enhancement
+        <span role="img">✨</span> on menus that are already keyboard navigable with the tab key.
+        For instance, here's this example without <code>&lt;roving-tabindex&gt;</code>. The arrow
+        keys don't work, but you can still access each menu item by tabbing through.
+      </p>
+
+      <ul class="menu">
+        <li><button>One</button></li>
+        <li><button>Two</button></li>
+        <li><button>Three</button></li>
+        <li><a href="#">Link</a></li>
+      </ul>
+
+      <h3 id="examples-spreadsheet"><a href="#examples-spreadsheet">Spreadsheet</a></h3>
+      <p>
+        <code>&lt;roving-tabindex&gt;</code> can also be used to navigate in two dimensions by
+        setting the <code>direction</code> attribute to <code>"grid"</code> and setting the
+        <code>columns</code> attribute to the number of columns. Here, it's used to replicate a
+        spreadsheet interface.
+      </p>
+      <p>
+        Each table cell contains a <code>&lt;label&gt;</code> and a hidden
+        <code>&lt;input&gt;</code>. When the user presses a key other than the keys
+        <code>&lt;roving-tabindex&gt;</code> uses for navigation on a <code>&lt;label&gt;</code>,
+        hide it and show the corresponding <code>&lt;input&gt;</code>. When the user presses
+        <code>Enter</code> or <code>Escape</code> on the <code>&lt;input&gt;</code>, swap it back.
+      </p>
+      <p>
+        Call <code>stopPropagation</code> on <code>keydown</code> events originating from
+        <code>&lt;input&gt;</code> elements to prevent <code>&lt;roving-tabindex&gt;</code> from
+        changing the focused element while editing text.
+      </p>
+      <roving-tabindex selector="label" direction="grid" columns="5">
         <table id="spreadsheet">
           <thead>
             <tr>
               <th width="0"></th>
-              <th>A</th>
-              <th>B</th>
-              <th>C</th>
-              <th>D</th>
-              <th>E</th>
+              <th width="20%">A</th>
+              <th width="20%">B</th>
+              <th width="20%">C</th>
+              <th width="20%">D</th>
+              <th width="20%">E</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <th>1</th>
-              <td><input /></td>
-              <td><input /></td>
-              <td><input /></td>
-              <td><input /></td>
-              <td><input /></td>
+              <td><label for="a1"></label><input class="hidden" id="a1" /></td>
+              <td><label for="a2"></label><input class="hidden" id="a2" /></td>
+              <td><label for="a3"></label><input class="hidden" id="a3" /></td>
+              <td><label for="a4"></label><input class="hidden" id="a4" /></td>
+              <td><label for="a5"></label><input class="hidden" id="a5" /></td>
             </tr>
             <tr>
               <th>2</th>
-              <td><input /></td>
-              <td><input /></td>
-              <td><input /></td>
-              <td><input /></td>
-              <td><input /></td>
+              <td><label for="b1"></label><input class="hidden" id="b1" /></td>
+              <td><label for="b2"></label><input class="hidden" id="b2" /></td>
+              <td><label for="b3"></label><input class="hidden" id="b3" /></td>
+              <td><label for="b4"></label><input class="hidden" id="b4" /></td>
+              <td><label for="b5"></label><input class="hidden" id="b5" /></td>
             </tr>
             <tr>
               <th>3</th>
-              <td><input /></td>
-              <td><input /></td>
-              <td><input /></td>
-              <td><input /></td>
-              <td><input /></td>
+              <td><label for="c1"></label><input class="hidden" id="c1" /></td>
+              <td><label for="c2"></label><input class="hidden" id="c2" /></td>
+              <td><label for="c3"></label><input class="hidden" id="c3" /></td>
+              <td><label for="c4"></label><input class="hidden" id="c4" /></td>
+              <td><label for="c5"></label><input class="hidden" id="c5" /></td>
             </tr>
             <tr>
               <th>4</th>
-              <td><input /></td>
-              <td><input /></td>
-              <td><input /></td>
-              <td><input /></td>
-              <td><input /></td>
+              <td><label for="d1"></label><input class="hidden" id="d1" /></td>
+              <td><label for="d2"></label><input class="hidden" id="d2" /></td>
+              <td><label for="d3"></label><input class="hidden" id="d3" /></td>
+              <td><label for="d4"></label><input class="hidden" id="d4" /></td>
+              <td><label for="d5"></label><input class="hidden" id="d5" /></td>
             </tr>
             <tr>
               <th>5</th>
-              <td><input /></td>
-              <td><input /></td>
-              <td><input /></td>
-              <td><input /></td>
-              <td><input /></td>
+              <td><label for="a1"></label><input class="hidden" id="e1" /></td>
+              <td><label for="a2"></label><input class="hidden" id="e2" /></td>
+              <td><label for="a3"></label><input class="hidden" id="e3" /></td>
+              <td><label for="a4"></label><input class="hidden" id="e4" /></td>
+              <td><label for="a5"></label><input class="hidden" id="e5" /></td>
             </tr>
           </tbody>
         </table>
       </roving-tabindex>
       <script>
         spreadsheet.addEventListener("keydown", evt => {
-          switch (evt.key) {
-            case "ArrowLeft":
-              if (evt.target.selectionStart > 0) evt.stopPropagation();
-              break;
-            case "ArrowRight":
-              if (evt.target.selectionStart < evt.target.value?.length) evt.stopPropagation();
-              break;
+          if (evt.target instanceof HTMLLabelElement) {
+            switch (evt.key) {
+              case "ArrowUp":
+              case "ArrowDown":
+              case "ArrowLeft":
+              case "ArrowRight":
+              case "Home":
+              case "End":
+                break;
+
+              default:
+                const input = spreadsheet.querySelector("#" + evt.target.htmlFor);
+                evt.target.classList.add("hidden");
+                input.classList.remove("hidden");
+                input.focus();
+                break;
+            }
+          }
+
+          if (evt.target instanceof HTMLInputElement) {
+            evt.stopPropagation();
+            const label = spreadsheet.querySelector(`[for="${evt.target.id}"]`);
+            switch (evt.key) {
+              case "Enter":
+                label.innerText = evt.target.value;
+              // fallthrough
+              case "Escape":
+                evt.target.classList.add("hidden");
+                label.classList.remove("hidden");
+                label.focus();
+                break;
+            }
+          }
+        });
+
+        spreadsheet.addEventListener("focusout", evt => {
+          if (evt.target instanceof HTMLInputElement) {
+            const label = spreadsheet.querySelector(`[for="${evt.target.id}"]`);
+            label.innerText = evt.target.value;
+            evt.target.classList.add("hidden");
+            label.classList.remove("hidden");
           }
         });
       </script>
 
-      <h2>Attributes</h2>
+      <details>
+        <summary>Source</summary>
+        <pre><code>&lt;roving-tabindex selector="label" direction="grid" columns="5"&gt;
+  &lt;table id="spreadsheet"&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th width="0"&gt;&lt;/th&gt;
+        &lt;th width="20%"&gt;A&lt;/th&gt;
+        &lt;th width="20%"&gt;B&lt;/th&gt;
+        &lt;th width="20%"&gt;C&lt;/th&gt;
+        &lt;th width="20%"&gt;D&lt;/th&gt;
+        &lt;th width="20%"&gt;E&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;th&gt;1&lt;/th&gt;
+        &lt;td&gt;&lt;label for="a1"&gt;&lt;/label&gt;&lt;input class="hidden" id="a1" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="a2"&gt;&lt;/label&gt;&lt;input class="hidden" id="a2" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="a3"&gt;&lt;/label&gt;&lt;input class="hidden" id="a3" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="a4"&gt;&lt;/label&gt;&lt;input class="hidden" id="a4" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="a5"&gt;&lt;/label&gt;&lt;input class="hidden" id="a5" /&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;th&gt;2&lt;/th&gt;
+        &lt;td&gt;&lt;label for="b1"&gt;&lt;/label&gt;&lt;input class="hidden" id="b1" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="b2"&gt;&lt;/label&gt;&lt;input class="hidden" id="b2" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="b3"&gt;&lt;/label&gt;&lt;input class="hidden" id="b3" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="b4"&gt;&lt;/label&gt;&lt;input class="hidden" id="b4" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="b5"&gt;&lt;/label&gt;&lt;input class="hidden" id="b5" /&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;th&gt;3&lt;/th&gt;
+        &lt;td&gt;&lt;label for="c1"&gt;&lt;/label&gt;&lt;input class="hidden" id="c1" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="c2"&gt;&lt;/label&gt;&lt;input class="hidden" id="c2" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="c3"&gt;&lt;/label&gt;&lt;input class="hidden" id="c3" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="c4"&gt;&lt;/label&gt;&lt;input class="hidden" id="c4" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="c5"&gt;&lt;/label&gt;&lt;input class="hidden" id="c5" /&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;th&gt;4&lt;/th&gt;
+        &lt;td&gt;&lt;label for="d1"&gt;&lt;/label&gt;&lt;input class="hidden" id="d1" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="d2"&gt;&lt;/label&gt;&lt;input class="hidden" id="d2" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="d3"&gt;&lt;/label&gt;&lt;input class="hidden" id="d3" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="d4"&gt;&lt;/label&gt;&lt;input class="hidden" id="d4" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="d5"&gt;&lt;/label&gt;&lt;input class="hidden" id="d5" /&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;th&gt;5&lt;/th&gt;
+        &lt;td&gt;&lt;label for="a1"&gt;&lt;/label&gt;&lt;input class="hidden" id="e1" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="a2"&gt;&lt;/label&gt;&lt;input class="hidden" id="e2" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="a3"&gt;&lt;/label&gt;&lt;input class="hidden" id="e3" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="a4"&gt;&lt;/label&gt;&lt;input class="hidden" id="e4" /&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for="a5"&gt;&lt;/label&gt;&lt;input class="hidden" id="e5" /&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/roving-tabindex&gt;
+&lt;script&gt;
+  spreadsheet.addEventListener("keydown", evt =&gt; {
+    if (evt.target instanceof HTMLLabelElement) {
+      switch (evt.key) {
+        // send arrow keys and home/end through to &lt;roving-tabindex&gt;
+        case "ArrowUp":
+        case "ArrowDown":
+        case "ArrowLeft":
+        case "ArrowRight":
+        case "Home":
+        case "End":
+          break;
 
-      <table class="attributes">
+        // for all other keys, swap in the corresponding &lt;input&gt; element
+        default:
+          const input = spreadsheet.querySelector("#" + evt.target.htmlFor);
+          evt.target.classList.add("hidden");
+          input.classList.remove("hidden");
+          input.focus();
+          break;
+      }
+    }
+
+    if (evt.target instanceof HTMLInputElement) {
+      // stop keydown events on &lt;input&gt; elements from reaching &lt;roving-tabindex&gt;
+      evt.stopPropagation();
+
+      const label = spreadsheet.querySelector(`[for="${evt.target.id}"]`);
+      switch (evt.key) {
+        case "Enter":
+          label.innerText = evt.target.value;
+        // fallthrough
+        case "Escape":
+          evt.target.classList.add("hidden");
+          label.classList.remove("hidden");
+          label.focus();
+          break;
+      }
+    }
+  });
+
+  spreadsheet.addEventListener("focusout", evt =&gt; {
+    if (evt.target instanceof HTMLInputElement) {
+      const label = spreadsheet.querySelector(`[for="${evt.target.id}"]`);
+      label.innerText = evt.target.value;
+      evt.target.classList.add("hidden");
+      label.classList.remove("hidden");
+    }
+  });
+&lt;/script&gt;</code></pre>
+      </details>
+
+      <h2 id="api"><a href="#api">API</a></h2>
+
+      <p>
+        There are three main ways to control <code>&lt;roving-tabindex&gt;</code> and the focus of
+        the elements it manages: <a href="#api-attributes">attributes</a>,
+        <a href="#api-methods">methods</a> and <a href="#events">events</a>.
+      </p>
+
+      <h3 id="api-attributes"><a href="#api-attributes">Attributes</a></h3>
+
+      <p>
+        Attributes are applied to the <code>&lt;roving-tabindex&gt;</code> tag in HTML to control
+        its behavior.
+      </p>
+
+      <table>
         <thead>
           <tr>
             <th>Name</th>
@@ -170,79 +398,81 @@
           <tr>
             <td><code>direction</code></td>
             <td>
-              <p>hmm</p>
-              <dl>
-                <dt><code>"horizontal"</code></dt>
-                <dd>asdf</dd>
-                <dt><code>"vertical"</code></dt>
-                <dd>asdf</dd>
-                <dt><code>"both"</code></dt>
-                <dd>asdf</dd>
-                <dt><code>"grid"</code></dt>
-                <dd>asdf</dd>
-              </dl>
+              <p>Determines the behavior of the arrow keys.</p>
+              <ul>
+                <li>
+                  <code>"both"</code> makes right/down focus the next element and left/up focus the
+                  previous.
+                </li>
+                <li>
+                  <code>"horizontal"</code> makes right focus the next element and left focus the
+                  previous.
+                </li>
+                <li>
+                  <code>"vertical"</code> uses up focus the next element and down focus the
+                  previous.
+                </li>
+                <li>
+                  <code>"grid"</code> makes the arrow keys navigate in two dimensions on a grid. The
+                  <code>columns</code> attribute is required for grid navigation.
+                </li>
+              </ul>
             </td>
             <td><code>"both"</code></td>
           </tr>
           <tr>
             <td><code>columns</code></td>
-            <td></td>
+            <td>The number of columns each grid row has.</td>
             <td>0</td>
           </tr>
         </tbody>
       </table>
 
-      <h2>oops</h2>
+      <h3 id="methods"><a href="#api-methods">Methods</a></h3>
 
-      <button onclick="tbody.append(...template.cloneNode(true).content.children); rover.focus()">
-        Add row
-      </button>
-      <roving-tabindex
-        id="rover"
-        selector="input, td:not(:has(input))"
-        direction="grid"
-        columns="5"
-      >
-        <table>
-          <tbody id="tbody">
-            <tr>
-              <td>a</td>
-              <td>b</td>
-              <td><input type="text" /></td>
-              <td>d</td>
-              <td>e</td>
-            </tr>
-            <tr>
-              <td>a</td>
-              <td>b</td>
-              <td>c</td>
-              <td>d</td>
-              <td>e</td>
-            </tr>
-          </tbody>
-        </table>
-      </roving-tabindex>
-      <script>
-        tbody.addEventListener("keydown", evt => {
-          switch (evt.key) {
-            case "ArrowLeft":
-              if (evt.target.selectionStart > 0) evt.stopPropagation();
-              break;
-            case "ArrowRight":
-              if (evt.target.selectionStart < evt.target.value?.length) evt.stopPropagation();
-              break;
-          }
-        });
-      </script>
-      <template id="template">
-        <tr>
-          <td>a</td>
-          <td>b</td>
-          <td>c</td>
-          <td>d</td>
-          <td>e</td>
-        </tr>
-      </template>
+      <p>
+        <code>&lt;roving-tabindex&gt;</code> provides methods that can be called with a direct
+        reference to its DOM node.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th width="80%">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>focus()</code></td>
+            <td>Return focus to the most recently focused descendant.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3 id="events"><a href="#api-events">Events</a></h3>
+
+      <p>
+        The focus of elements can also be controlled by dispatching custom events, either directly
+        on the <code>&lt;roving-tabindex&gt;</code> element itself or on one of its descendants.
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th width="60%">Description</th>
+            <th>Detail</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>rove</code></td>
+            <td>Move focus by a given number of rows or columns.</td>
+            <td><code>{ rows?: number; cols?: number }</code></td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </body>
 </html>

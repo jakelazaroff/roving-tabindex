@@ -4,14 +4,10 @@ customElements.define(
     static #DIRECTIONS = new Set(["vertical", "horizontal", "both", "grid"]);
 
     #observer = new MutationObserver(() => this.#collect());
+
+    /** @type {NodeListOf<HTMLElement>} */
     #elements = this.querySelectorAll(":root");
     #focused = -1;
-
-    constructor() {
-      super();
-      this.addEventListener("keydown", this);
-      this.addEventListener("focusin", this);
-    }
 
     focus() {
       const target = this.#elements[this.#focused];
@@ -22,23 +18,31 @@ customElements.define(
 
     /** @param {Event} evt */
     handleEvent(evt) {
+      if (!(evt.target instanceof HTMLElement)) return;
       if (!new Set(this.#elements).has(evt.target)) return;
 
       switch (evt.type) {
         case "keydown":
-          this.#handleKeydown(evt);
+          if (evt instanceof KeyboardEvent) this.#handleKeydown(evt);
           break;
 
         case "focusin":
-          this.#handleFocusIn(evt);
+          if (evt instanceof FocusEvent) this.#handleFocusIn(evt);
+          break;
+
+        case "rove":
+          if (evt instanceof CustomEvent) this.#handleRove(evt);
           break;
       }
     }
 
     /** @type {"horizontal" | "vertical" | "both" | "grid"} */
     get #direction() {
+      /** @typedef {"horizontal" | "vertical" | "both" | "grid"} Direction */
+
       const direction = this.getAttribute("direction");
-      if (RovingTabindex.#DIRECTIONS.has(direction)) return direction;
+      if (direction && RovingTabindex.#DIRECTIONS.has(direction))
+        return /** @type {Direction} */ (direction);
 
       return "both";
     }
@@ -83,7 +87,16 @@ customElements.define(
 
     /** @param {FocusEvent} evt */
     #handleFocusIn(evt) {
+      if (!(evt.target instanceof HTMLElement)) return;
       this.#focus(evt.target);
+    }
+
+    /** @param {CustomEvent<{ rows?: number; cols?: number }>} evt */
+    #handleRove(evt) {
+      console.log(evt.detail);
+      let { rows: x, cols: y } = evt.detail;
+      if (typeof x === "number" && Boolean(x)) this.#moveHorizontal(x);
+      if (typeof y === "number" && Boolean(y)) this.#moveVertical(y);
     }
 
     /** @param {number} n */
@@ -154,7 +167,7 @@ customElements.define(
       }
     }
 
-    /** @param {HTMLElement} el */
+    /** @param {HTMLElement} target */
     #focus(target) {
       for (const el of this.#elements) {
         el.tabIndex = -1;
@@ -175,7 +188,7 @@ customElements.define(
       }
 
       // get the new elements
-      const selector = this.getAttribute("selector");
+      const selector = this.getAttribute("selector") || ":root";
       this.#elements = this.querySelectorAll(selector);
 
       // update the index of the focused element
@@ -183,11 +196,11 @@ customElements.define(
 
       // update the tabindex of the elements
       for (const el of this.#elements) {
-        el.tabIndex = "-1";
+        el.tabIndex = -1;
       }
 
       if (focused) focused.tabIndex = 0;
-      else this.#elements[0].tabIndex = 0;
+      else if (this.#elements[0]) this.#elements[0].tabIndex = 0;
     }
 
     attributeChangedCallback() {
@@ -196,10 +209,17 @@ customElements.define(
 
     connectedCallback() {
       this.#collect();
+      this.addEventListener("keydown", this);
+      this.addEventListener("focusin", this);
+      this.addEventListener("rove", this);
       this.#observer.observe(this, { subtree: true, childList: true });
     }
 
     disconnectedCallback() {
+      this.removeEventListener("keydown", this);
+      this.removeEventListener("focusin", this);
+      this.removeEventListener("rove", this);
+
       // remove tabindex from all the elements
       for (const el of this.#elements) {
         el.removeAttribute("tabIndex");
