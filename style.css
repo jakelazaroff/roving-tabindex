@@ -1,0 +1,173 @@
+/* reset */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  color: currentColor;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+/* theme */
+
+:root {
+  --primary: #f06595;
+  --primary-hover: #f783ac;
+  --primary-active: #e64980;
+  --border: #444444;
+  accent-color: var(--primary);
+}
+
+body {
+  font-family: system-ui;
+  padding: 40px;
+}
+
+h2 {
+  margin: 2rem 0;
+}
+
+h3 {
+  margin: 1rem 0;
+}
+
+h2::after {
+  content: "";
+  display: block;
+  border-bottom: 1px solid var(--border);
+}
+
+p {
+  margin: 1rem 0;
+}
+
+a {
+  color: var(--primary);
+}
+
+a:hover {
+  color: var(--primary-hover);
+}
+
+a:active {
+  color: var(--primary-active);
+}
+
+:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+button {
+  padding: 4px 8px;
+  border: 0;
+  font-weight: bold;
+  border-radius: 4px;
+  background-color: var(--primary);
+}
+
+button:hover {
+  background-color: var(--primary-hover);
+}
+
+button:active {
+  background-color: var(--primary-active);
+}
+
+input {
+  width: 100%;
+}
+
+pre code {
+  white-space: pre-line;
+}
+
+.menu {
+  display: flex;
+  gap: 8px;
+  list-style: none;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  position: relative;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+}
+
+td:focus,
+td:has(:focus) {
+  z-index: 1;
+}
+
+td:has(input) {
+  padding: 0;
+}
+
+.attributes td,
+.attributes th {
+  padding: 8px 16px;
+  border-left: 0;
+  border-right: 0;
+}
+
+.attributes th {
+  border: 0;
+  text-align: left;
+}
+
+/* layout */
+
+.content {
+  max-width: 60rem;
+  margin: 0 auto;
+}

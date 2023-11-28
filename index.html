@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Roving tabindex</title>
+    <meta name="color-scheme" content="light dark" />
+    <link rel="stylesheet" href="/style.css" />
+    <script src="/rovingtabindex-0.1.0.js" type="module"></script>
+  </head>
+  <body>
+    <div class="content">
+      <h1>Roving tabindex</h1>
+      <span><code>&lt;roving-tabindex&gt;</code></p>
+
+      <p>
+        A simple <a href="https://adactio.com/journal/20618">HTML web component</a> that implements
+        the
+        <a href="https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex"
+          >roving tabindex pattern</a
+        >
+        for building accessible menus and grids.
+      </p>
+      <p>
+        Wrap it around some markup and give it a selector to determine which descendants become
+        selectable.
+      </p>
+
+      <roving-tabindex selector="button" direction="horizontal">
+        <ul class="menu">
+          <li><button>One</button></li>
+          <li><button>Two</button></li>
+          <li><button>Three</button></li>
+        </ul>
+      </roving-tabindex>
+
+      <details>
+        <summary>Source</summary>
+        <pre>
+          <code>
+            &lt;roving-tabindex selector="button" direction="horziontal"&gt;
+              &lt;ul&gt;
+                &lt;li&gt;&lt;button&gt;One&lt;/button&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;button&gt;Two&lt;/button&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;button&gt;Three&lt;/button&gt;&lt;/li&gt;
+              &lt;/ul&gt;
+            &lt;/roving-tabindex&gt;
+          </code>
+        </pre>
+      </details>
+
+      <h2>Examples</h2>
+
+      <h3>Menu Bar</h3>
+      <roving-tabindex selector="button" direction="horizontal">
+        <ul class="menu">
+          <li><button>One</button></li>
+          <li><button>Two</button></li>
+          <li><button>Three</button></li>
+          <li><button>Four</button></li>
+          <li><button>Five</button></li>
+        </ul>
+      </roving-tabindex>
+
+      <details>
+        <summary>Source</summary>
+        <pre>
+          <code>
+            &lt;roving-tabindex selector="button" direction="horziontal"&gt;
+              &lt;ul&gt;
+                &lt;li&gt;&lt;button&gt;One&lt;/button&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;button&gt;Two&lt;/button&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;button&gt;Three&lt;/button&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;button&gt;Four&lt;/button&gt;&lt;/li&gt;
+                &lt;li&gt;&lt;button&gt;Five&lt;/button&gt;&lt;/li&gt;
+              &lt;/ul&gt;
+            &lt;/roving-tabindex&gt;
+          </code>
+        </pre>
+      </details>
+
+      <h3>Spreadsheet</h3>
+      <p>
+        Using roving tabindex with a table of input elements can replicate a spreadsheet interface.
+        Strategically stopping keydown event propagation tktktk.
+      </p>
+      <roving-tabindex selector="input" direction="grid" columns="5">
+        <table id="spreadsheet">
+          <thead>
+            <tr>
+              <th width="0"></th>
+              <th>A</th>
+              <th>B</th>
+              <th>C</th>
+              <th>D</th>
+              <th>E</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>1</th>
+              <td><input /></td>
+              <td><input /></td>
+              <td><input /></td>
+              <td><input /></td>
+              <td><input /></td>
+            </tr>
+            <tr>
+              <th>2</th>
+              <td><input /></td>
+              <td><input /></td>
+              <td><input /></td>
+              <td><input /></td>
+              <td><input /></td>
+            </tr>
+            <tr>
+              <th>3</th>
+              <td><input /></td>
+              <td><input /></td>
+              <td><input /></td>
+              <td><input /></td>
+              <td><input /></td>
+            </tr>
+            <tr>
+              <th>4</th>
+              <td><input /></td>
+              <td><input /></td>
+              <td><input /></td>
+              <td><input /></td>
+              <td><input /></td>
+            </tr>
+            <tr>
+              <th>5</th>
+              <td><input /></td>
+              <td><input /></td>
+              <td><input /></td>
+              <td><input /></td>
+              <td><input /></td>
+            </tr>
+          </tbody>
+        </table>
+      </roving-tabindex>
+      <script>
+        spreadsheet.addEventListener("keydown", evt => {
+          switch (evt.key) {
+            case "ArrowLeft":
+              if (evt.target.selectionStart > 0) evt.stopPropagation();
+              break;
+            case "ArrowRight":
+              if (evt.target.selectionStart < evt.target.value?.length) evt.stopPropagation();
+              break;
+          }
+        });
+      </script>
+
+      <h2>Attributes</h2>
+
+      <table class="attributes">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th width="80%">Description</th>
+            <th>Default</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>selector</code></td>
+            <td>A CSS selector that determines which descendant elements should be navigable.</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td><code>direction</code></td>
+            <td>
+              <p>hmm</p>
+              <dl>
+                <dt><code>"horizontal"</code></dt>
+                <dd>asdf</dd>
+                <dt><code>"vertical"</code></dt>
+                <dd>asdf</dd>
+                <dt><code>"both"</code></dt>
+                <dd>asdf</dd>
+                <dt><code>"grid"</code></dt>
+                <dd>asdf</dd>
+              </dl>
+            </td>
+            <td><code>"both"</code></td>
+          </tr>
+          <tr>
+            <td><code>columns</code></td>
+            <td></td>
+            <td>0</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>oops</h2>
+
+      <button onclick="tbody.append(...template.cloneNode(true).content.children); rover.focus()">
+        Add row
+      </button>
+      <roving-tabindex
+        id="rover"
+        selector="input, td:not(:has(input))"
+        direction="grid"
+        columns="5"
+      >
+        <table>
+          <tbody id="tbody">
+            <tr>
+              <td>a</td>
+              <td>b</td>
+              <td><input type="text" /></td>
+              <td>d</td>
+              <td>e</td>
+            </tr>
+            <tr>
+              <td>a</td>
+              <td>b</td>
+              <td>c</td>
+              <td>d</td>
+              <td>e</td>
+            </tr>
+          </tbody>
+        </table>
+      </roving-tabindex>
+      <script>
+        tbody.addEventListener("keydown", evt => {
+          switch (evt.key) {
+            case "ArrowLeft":
+              if (evt.target.selectionStart > 0) evt.stopPropagation();
+              break;
+            case "ArrowRight":
+              if (evt.target.selectionStart < evt.target.value?.length) evt.stopPropagation();
+              break;
+          }
+        });
+      </script>
+      <template id="template">
+        <tr>
+          <td>a</td>
+          <td>b</td>
+          <td>c</td>
+          <td>d</td>
+          <td>e</td>
+        </tr>
+      </template>
+    </div>
+  </body>
+</html>
