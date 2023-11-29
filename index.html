@@ -5,8 +5,8 @@
     <title>Roving tabindex</title>
     <meta name="color-scheme" content="light dark" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="/style.css" />
-    <script src="/rovingtabindex-0.1.0.js" type="module"></script>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="./rovingtabindex-0.1.0.js" type="module"></script>
   </head>
   <body>
     <div class="content">
@@ -22,20 +22,16 @@
       </header>
 
       <p>
-        A simple <a href="https://adactio.com/journal/20618">HTML web component</a> that implements
-        the
+        A simple <a href="https://adactio.com/journal/20618">HTML web component</a> that implements the
         <a href="https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex"
           >roving tabindex pattern</a
         >
         for building accessible menus and grids.
       </p>
-      <p>
-        Wrap it around some markup and give it a selector to determine which descendants become
-        selectable!
-      </p>
+      <p>Wrap it around some markup and give it a selector to determine which elements become navigable!</p>
 
       <roving-tabindex selector="button">
-        <ul class="menu">
+        <ul class="menu" role="toolbar" aria-label="toolbar example">
           <li>
             <button>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
@@ -64,7 +60,7 @@
       </roving-tabindex>
 
       <pre class="codeblock"><code>&lt;roving-tabindex selector="button"&gt;
-  &lt;ul class="menu"&gt;
+  &lt;ul class="menu" role="toolbar" aria-label="toolbar example"&gt;
     &lt;li&gt;
       &lt;button&gt;
         &lt;svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"&gt;
@@ -92,11 +88,11 @@
   &lt;/ul&gt;
 &lt;/roving-tabindex&gt;</code></pre>
 
-      <h2 id="installation"><a href="#installation">Installation</a></h2>
+      <h2 id="usage"><a href="#usage">Usage</a></h2>
 
       <p>
-        There's no installation process; simply download
-        <a target="_blank" href="/rovingtabindex-0.1.0.js"><code>roving-tabindex-0.1.0.js</code></a>
+        First, download
+        <a target="_blank" href="./rovingtabindex-0.1.0.js"><code>roving-tabindex-0.1.0.js</code></a>
         and link to it on your page.
       </p>
 
@@ -104,21 +100,43 @@
         class="codeblock"
       ><code>&lt;script type="module" src="/rovingtabindex-0.1.0.js"&gt;&lt;script/&gt;</code></pre>
 
+      <p>
+        Then, wrap <code>&lt;roving-tabindex&gt;</code> around the markup for which you want arrow key navigation. Use
+        the <code>selector</code> prop to determine which descendant elements should be included.
+      </p>
+
+      <pre class="codeblock"><code>&lt;roving-tabindex selector="button" direction="horziontal"&gt;
+  &lt;ul class="menu" role="toolbar" aria-label="toolbar-example"&gt;
+    &lt;li&gt;&lt;button&gt;One&lt;/button&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;button&gt;Two&lt;/button&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;button&gt;Three&lt;/button&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;Link&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/roving-tabindex&gt;</code></pre>
+
+      <p>
+        Make sure you set <a href="https://www.w3.org/WAI/standards-guidelines/aria/">WAI-ARIA</a>-related properties as
+        appropriate. For example, the previous demo implements keyboard navigation described in the
+        <a href="https://www.w3.org/WAI/ARIA/apg/patterns/toolbar/">toolbar pattern</a>, but
+        <code>&lt;roving-tabindex&gt;</code> doesn't manage the <code>role</code> and
+        <code>aria-label</code> attributes.
+      </p>
+
       <h2 id="examples"><a href="#examples">Examples</a></h2>
 
       <h3 id="examples-menu-bar"><a href="#examples-menu-bar">Menu Bar</a></h3>
       <p>
-        The simplest use of <code>&lt;roving-tabindex&gt;</code> is to make a one dimensional list
-        of buttons or links navigable with arrow keys.
+        The simplest use of <code>&lt;roving-tabindex&gt;</code> is to make a one dimensional list of buttons or links
+        navigable with arrow keys.
       </p>
       <p>
-        By default, the left/up and right/down arrow keys move forward and backward in the list,
-        respectively, but you can set the <code>direction</code> attribute to
-        <code>"horizontal"</code> or <code>"vertical"</code> to use only one dimension.
+        By default, the left/up and right/down arrow keys move forward and backward in the list, respectively, but you
+        can set the <code>direction</code> attribute to <code>"horizontal"</code> or <code>"vertical"</code> to use only
+        one dimension.
       </p>
 
       <roving-tabindex selector="button, a" direction="horizontal">
-        <ul class="menu">
+        <ul class="menu" role="toolbar">
           <li><button>One</button></li>
           <li><button>Two</button></li>
           <li><button>Three</button></li>
@@ -128,10 +146,8 @@
 
       <details>
         <summary>Source</summary>
-        <pre
-          class="prescroll"
-        ><code>&lt;roving-tabindex selector="button" direction="horziontal"&gt;
-  &lt;ul&gt;
+        <pre class="prescroll"><code>&lt;roving-tabindex selector="button" direction="horziontal"&gt;
+  &lt;ul class="menu" role="toolbar" aria-label="toolbar-example"&gt;
     &lt;li&gt;&lt;button&gt;One&lt;/button&gt;&lt;/li&gt;
     &lt;li&gt;&lt;button&gt;Two&lt;/button&gt;&lt;/li&gt;
     &lt;li&gt;&lt;button&gt;Three&lt;/button&gt;&lt;/li&gt;
@@ -141,10 +157,10 @@
       </details>
 
       <p>
-        This works especially well as <span role="img">✨</span> progressive enhancement
-        <span role="img">✨</span> on menus that are already keyboard navigable with the tab key.
-        For instance, here's this example without <code>&lt;roving-tabindex&gt;</code>. The arrow
-        keys don't work, but you can still access each menu item by tabbing through.
+        This works especially well as <span role="img">✨</span> progressive enhancement <span role="img">✨</span> on
+        menus that are already keyboard navigable with the tab key. For instance, here's this example without
+        <code>&lt;roving-tabindex&gt;</code>. The arrow keys don't work, but you can still access each menu item by
+        tabbing through.
       </p>
 
       <ul class="menu">
@@ -156,22 +172,20 @@
 
       <h3 id="examples-spreadsheet"><a href="#examples-spreadsheet">Spreadsheet</a></h3>
       <p>
-        <code>&lt;roving-tabindex&gt;</code> can also be used to navigate in two dimensions by
-        setting the <code>direction</code> attribute to <code>"grid"</code> and setting the
-        <code>columns</code> attribute to the number of columns. Here, it's used to replicate a
-        spreadsheet interface.
+        <code>&lt;roving-tabindex&gt;</code> can also be used to navigate in two dimensions by setting the
+        <code>direction</code> attribute to <code>"grid"</code> and setting the <code>columns</code> attribute to the
+        number of columns. Here, it's used to replicate a spreadsheet interface.
       </p>
       <p>
-        Each table cell contains a <code>&lt;label&gt;</code> and a hidden
-        <code>&lt;input&gt;</code>. When the user presses a key other than the keys
-        <code>&lt;roving-tabindex&gt;</code> uses for navigation on a <code>&lt;label&gt;</code>,
-        hide it and show the corresponding <code>&lt;input&gt;</code>. When the user presses
+        Each table cell contains a <code>&lt;label&gt;</code> and a hidden <code>&lt;input&gt;</code>. When the user
+        presses a key other than the keys <code>&lt;roving-tabindex&gt;</code> uses for navigation on a
+        <code>&lt;label&gt;</code>, hide it and show the corresponding <code>&lt;input&gt;</code>. When the user presses
         <code>Enter</code> or <code>Escape</code> on the <code>&lt;input&gt;</code>, swap it back.
       </p>
       <p>
         Call <code>stopPropagation</code> on <code>keydown</code> events originating from
-        <code>&lt;input&gt;</code> elements to prevent <code>&lt;roving-tabindex&gt;</code> from
-        changing the focused element while editing text.
+        <code>&lt;input&gt;</code> elements to prevent <code>&lt;roving-tabindex&gt;</code> from changing the focused
+        element while editing text.
       </p>
       <roving-tabindex selector="label" direction="grid" columns="5">
         <table id="spreadsheet">
@@ -279,9 +293,7 @@
 
       <details>
         <summary>Source</summary>
-        <pre
-          class="prescroll"
-        ><code>&lt;roving-tabindex selector="label" direction="grid" columns="5"&gt;
+        <pre class="prescroll"><code>&lt;roving-tabindex selector="label" direction="grid" columns="5"&gt;
   &lt;table id="spreadsheet"&gt;
     &lt;thead&gt;
       &lt;tr&gt;
@@ -393,17 +405,14 @@
       <h2 id="api"><a href="#api">API</a></h2>
 
       <p>
-        There are three main ways to control <code>&lt;roving-tabindex&gt;</code> and the focus of
-        the elements it manages: <a href="#api-attributes">attributes</a>,
-        <a href="#api-methods">methods</a> and <a href="#events">events</a>.
+        There are three main ways to control <code>&lt;roving-tabindex&gt;</code> and the focus of the elements it
+        manages: <a href="#api-attributes">attributes</a>, <a href="#api-methods">methods</a> and
+        <a href="#events">events</a>.
       </p>
 
       <h3 id="api-attributes"><a href="#api-attributes">Attributes</a></h3>
 
-      <p>
-        Attributes are applied to the <code>&lt;roving-tabindex&gt;</code> tag in HTML to control
-        its behavior.
-      </p>
+      <p>Attributes are applied to the <code>&lt;roving-tabindex&gt;</code> tag in HTML to control its behavior.</p>
 
       <table>
         <thead>
@@ -424,18 +433,9 @@
             <td>
               <p>Determines the behavior of the arrow keys.</p>
               <ul>
-                <li>
-                  <code>"both"</code> makes right/down focus the next element and left/up focus the
-                  previous.
-                </li>
-                <li>
-                  <code>"horizontal"</code> makes right focus the next element and left focus the
-                  previous.
-                </li>
-                <li>
-                  <code>"vertical"</code> uses up focus the next element and down focus the
-                  previous.
-                </li>
+                <li><code>"both"</code> makes right/down focus the next element and left/up focus the previous.</li>
+                <li><code>"horizontal"</code> makes right focus the next element and left focus the previous.</li>
+                <li><code>"vertical"</code> uses up focus the next element and down focus the previous.</li>
                 <li>
                   <code>"grid"</code> makes the arrow keys navigate in two dimensions on a grid. The
                   <code>columns</code> attribute is required for grid navigation.
@@ -455,8 +455,8 @@
       <h3 id="methods"><a href="#api-methods">Methods</a></h3>
 
       <p>
-        <code>&lt;roving-tabindex&gt;</code> provides methods that can be called with a direct
-        reference to its DOM node.
+        <code>&lt;roving-tabindex&gt;</code> provides methods that can be called with a direct reference to its DOM
+        node.
       </p>
 
       <table>
@@ -477,8 +477,8 @@
       <h3 id="events"><a href="#api-events">Events</a></h3>
 
       <p>
-        The focus of elements can also be controlled by dispatching custom events, either directly
-        on the <code>&lt;roving-tabindex&gt;</code> element itself or on one of its descendants.
+        The focus of elements can also be controlled by dispatching custom events, either directly on the
+        <code>&lt;roving-tabindex&gt;</code> element itself or on one of its descendants.
       </p>
 
       <table>
@@ -499,14 +499,13 @@
       </table>
     </div>
 
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+    <svg id="symbols" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
       <symbol id="github" width="16" height="16" viewBox="0 0 16 16">
         <path fill="currentColor" fill-rule="evenodd" d="M8 .2c-4.4 0-8 3.6-8 8 0 3.5 2.3 6.5 5.5
-        7.6.4.1.5-.2.5-.4V14c-2.2.5-2.7-1-2.7-1-.4-.9-.9-1.2-.9-1.2-.7-.5.1-.5.1-.5.8.1 1.2.8
-        1.2.8.7 1.3 1.9.9 2.3.7.1-.5.3-.9.5-1.1-1.8-.2-3.6-.9-3.6-4 0-.9.3-1.6.8-2.1-.1-.2-.4-1
-        .1-2.1 0 0 .7-.2 2.2.8.6-.2 1.3-.3 2-.3s1.4.1 2 .3c1.5-1 2.2-.8 2.2-.8.4 1.1.2 1.9.1
-        2.1.5.6.8 1.3.8 2.1 0 3.1-1.9 3.7-3.7 3.9.3.4.6.9.6 1.6v2.2c0 .2.1.5.6.4 3.2-1.1 5.5-4.1
-        5.5-7.6-.1-4.4-3.7-8-8.1-8z" clip-rule="evenodd" / >
+        7.6.4.1.5-.2.5-.4V14c-2.2.5-2.7-1-2.7-1-.4-.9-.9-1.2-.9-1.2-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.3 1.9.9
+        2.3.7.1-.5.3-.9.5-1.1-1.8-.2-3.6-.9-3.6-4 0-.9.3-1.6.8-2.1-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8.6-.2 1.3-.3
+        2-.3s1.4.1 2 .3c1.5-1 2.2-.8 2.2-.8.4 1.1.2 1.9.1 2.1.5.6.8 1.3.8 2.1 0 3.1-1.9 3.7-3.7 3.9.3.4.6.9.6 1.6v2.2c0
+        .2.1.5.6.4 3.2-1.1 5.5-4.1 5.5-7.6-.1-4.4-3.7-8-8.1-8z" clip-rule="evenodd" / >
       </symbol>
       <symbol id="cut" width="16" height="16" viewBox="0 0 16 16">
         <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -523,9 +522,7 @@
       </symbol>
       <symbol id="paste" width="16" height="16" viewBox="0 0 16 16">
         <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-          <path
-            d="M12.5 1.5h1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-12a1 1 0 0 1 1-1h1"
-          />
+          <path d="M12.5 1.5h1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-12a1 1 0 0 1 1-1h1" />
           <path d="M5.5.5h5v2h-5zM4.5 6.5h7M4.5 9.5h7M4.5 12.5h7" />
         </g>
       </symbol>

@@ -2,7 +2,7 @@
 
 A simple [HTML web component](https://adactio.com/journal/20618) that implements the [roving tabindex pattern](https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex) for building accessible menus and grids.
 
-Wrap it around some markup and give it a selector to determine which descendants become selectable!
+Wrap it around some markup and give it a selector to determine which elements become navigable!
 
 ```html
 <roving-tabindex selector="button">

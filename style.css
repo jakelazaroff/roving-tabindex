@@ -203,6 +203,10 @@ td {
 
 /* layout */
 
+#symbols {
+  display: none;
+}
+
 .content {
   max-width: 75rem;
   margin: 0 auto;
