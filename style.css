@@ -95,6 +95,10 @@ p {
   margin: 1rem 0;
 }
 
+h1 {
+  line-height: 1;
+}
+
 h2 {
   margin: 4rem 0 2rem;
 }
@@ -207,11 +211,22 @@ td {
 
 header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  row-gap: 1rem;
+}
+
+@media (min-width: 480px) {
+  header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .version {
+  display: inline-block;
   font-size: 1rem;
   font-family: ui-monospace;
   opacity: 0.5;
@@ -260,11 +275,16 @@ header {
   border-radius: 12px;
 }
 
+.prescroll {
+  overflow: auto;
+}
+
 .codeblock {
   margin: 1em 0;
   border: 1px solid var(--border);
   padding: 12px 16px;
   border-radius: 12px;
+  overflow: auto;
 }
 
 /* spreadsheet */

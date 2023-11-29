@@ -100,7 +100,9 @@
         and link to it on your page.
       </p>
 
-      <pre><code>&lt;script type="module" src="/rovingtabindex-0.1.0.js"&gt;&lt;script/&gt;</code></pre>
+      <pre
+        class="codeblock"
+      ><code>&lt;script type="module" src="/rovingtabindex-0.1.0.js"&gt;&lt;script/&gt;</code></pre>
 
       <h2 id="examples"><a href="#examples">Examples</a></h2>
 
@@ -126,7 +128,9 @@
 
       <details>
         <summary>Source</summary>
-        <pre><code>&lt;roving-tabindex selector="button" direction="horziontal"&gt;
+        <pre
+          class="prescroll"
+        ><code>&lt;roving-tabindex selector="button" direction="horziontal"&gt;
   &lt;ul&gt;
     &lt;li&gt;&lt;button&gt;One&lt;/button&gt;&lt;/li&gt;
     &lt;li&gt;&lt;button&gt;Two&lt;/button&gt;&lt;/li&gt;
@@ -225,6 +229,7 @@
           </tbody>
         </table>
       </roving-tabindex>
+
       <script>
         spreadsheet.addEventListener("keydown", evt => {
           if (evt.target instanceof HTMLLabelElement) {
@@ -274,7 +279,9 @@
 
       <details>
         <summary>Source</summary>
-        <pre><code>&lt;roving-tabindex selector="label" direction="grid" columns="5"&gt;
+        <pre
+          class="prescroll"
+        ><code>&lt;roving-tabindex selector="label" direction="grid" columns="5"&gt;
   &lt;table id="spreadsheet"&gt;
     &lt;thead&gt;
       &lt;tr&gt;
@@ -330,6 +337,7 @@
     &lt;/tbody&gt;
   &lt;/table&gt;
 &lt;/roving-tabindex&gt;
+
 &lt;script&gt;
   spreadsheet.addEventListener("keydown", evt =&gt; {
     if (evt.target instanceof HTMLLabelElement) {

@@ -33,13 +33,11 @@ customElements.define(
       }
     }
 
-    /** @type {"horizontal" | "vertical" | "both" | "grid"} */
     get #direction() {
       /** @typedef {"horizontal" | "vertical" | "both" | "grid"} Direction */
 
       const direction = this.getAttribute("direction");
-      if (direction && RovingTabindex.#DIRECTIONS.has(direction))
-        return /** @type {Direction} */ (direction);
+      if (direction && RovingTabindex.#DIRECTIONS.has(direction)) return /** @type {Direction} */ (direction);
 
       return "both";
     }
