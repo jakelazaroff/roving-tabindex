@@ -91,10 +91,6 @@ a:hover {
   color: var(--primary-hover);
 }
 
-a:active {
-  color: var(--primary-active);
-}
-
 p {
   margin: 1rem 0;
 }
@@ -213,6 +209,39 @@ td {
   font-size: 1rem;
   font-family: ui-monospace;
   opacity: 0.5;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.github {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  text-decoration: none;
+  background-color: #000000;
+  color: #ffffff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+}
+
+.github:hover {
+  color: #ffffff;
+}
+
+@media (prefers-color-scheme: dark) {
+  .github {
+    background-color: #ffffff;
+    color: #000000;
+  }
+
+  .github:hover {
+    color: #000000;
+  }
 }
 
 .menu {
