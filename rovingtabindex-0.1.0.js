@@ -10,10 +10,7 @@ customElements.define(
     #focused = -1;
 
     focus() {
-      const target = this.#elements[this.#focused];
-      if (!target) return;
-
-      this.#focus(target);
+      this.#elements[this.#focused]?.focus();
     }
 
     /** @param {Event} evt */
@@ -88,12 +85,20 @@ customElements.define(
     /** @param {FocusEvent} evt */
     #handleFocusIn(evt) {
       if (!(evt.target instanceof HTMLElement)) return;
-      this.#focus(evt.target);
+
+      const idx = [...this.#elements].indexOf(evt.target);
+      if (idx === -1) return;
+
+      for (const el of this.#elements) {
+        el.tabIndex = -1;
+      }
+
+      evt.target.tabIndex = 0;
+      this.#focused = idx;
     }
 
     /** @param {CustomEvent<{ rows?: number; cols?: number }>} evt */
     #handleRove(evt) {
-      console.log(evt.detail);
       let { rows: x, cols: y } = evt.detail;
       if (typeof x === "number" && Boolean(x)) this.#moveHorizontal(x);
       if (typeof y === "number" && Boolean(y)) this.#moveVertical(y);
@@ -107,7 +112,7 @@ customElements.define(
           const last = this.#elements.length - 1;
 
           const target = this.#elements[Math.max(0, Math.min(this.#focused + n, last))];
-          if (target) this.#focus(target);
+          if (target) target.focus();
           break;
         }
 
@@ -124,7 +129,7 @@ customElements.define(
           const offset = row * cols;
           // find the next target element within the row
           const target = this.#elements[Math.max(offset, Math.min(pos + n, offset + cols - 1))];
-          if (target) this.#focus(target);
+          if (target) target.focus();
           break;
         }
 
@@ -141,7 +146,7 @@ customElements.define(
           const last = this.#elements.length - 1;
 
           const target = this.#elements[Math.max(0, Math.min(this.#focused + n, last))];
-          if (target) this.#focus(target);
+          if (target) target.focus();
           break;
         }
 
@@ -158,24 +163,13 @@ customElements.define(
 
           // find the next target element
           const target = this.#elements[(row + n) * cols + col];
-          if (target) this.#focus(target);
+          if (target) target.focus();
           break;
         }
 
         case "horizontal":
           break;
       }
-    }
-
-    /** @param {HTMLElement} target */
-    #focus(target) {
-      for (const el of this.#elements) {
-        el.tabIndex = -1;
-      }
-
-      target.tabIndex = 0;
-      target.focus();
-      this.#focused = [...this.#elements].indexOf(target);
     }
 
     #collect() {
