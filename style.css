@@ -200,9 +200,15 @@ td {
 /* layout */
 
 .content {
-  max-width: 60rem;
+  max-width: 75rem;
   margin: 0 auto;
   padding: 40px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .version {
@@ -251,6 +257,13 @@ td {
   list-style: none;
   padding: 8px;
   border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.codeblock {
+  margin: 1em 0;
+  border: 1px solid var(--border);
+  padding: 12px 16px;
   border-radius: 12px;
 }
 

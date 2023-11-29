@@ -10,23 +10,16 @@
   </head>
   <body>
     <div class="content">
-      <h1>Roving tabindex <span class="version">0.1.0</span></h1>
+      <header>
+        <h1>Roving tabindex <span class="version">0.1.0</span></h1>
 
-      <div class="info">
-        <span><code>&lt;roving-tabindex&gt;</code></span>
         <a class="github" href="https://github.com/jakelazaroff/roving-tabindex/">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
-            <path fill="currentColor" fill-rule="evenodd" d="M8 .2c-4.4 0-8 3.6-8 8 0 3.5 2.3 6.5
-            5.5 7.6.4.1.5-.2.5-.4V14c-2.2.5-2.7-1-2.7-1-.4-.9-.9-1.2-.9-1.2-.7-.5.1-.5.1-.5.8.1
-            1.2.8 1.2.8.7 1.3 1.9.9 2.3.7.1-.5.3-.9.5-1.1-1.8-.2-3.6-.9-3.6-4
-            0-.9.3-1.6.8-2.1-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8.6-.2 1.3-.3 2-.3s1.4.1 2 .3c1.5-1
-            2.2-.8 2.2-.8.4 1.1.2 1.9.1 2.1.5.6.8 1.3.8 2.1 0 3.1-1.9 3.7-3.7 3.9.3.4.6.9.6
-            1.6v2.2c0 .2.1.5.6.4 3.2-1.1 5.5-4.1 5.5-7.6-.1-4.4-3.7-8-8.1-8z" clip-rule="evenodd" /
-            >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+            <use href="#github" />
           </svg>
           GitHub
         </a>
-      </div>
+      </header>
 
       <p>
         A simple <a href="https://adactio.com/journal/20618">HTML web component</a> that implements
@@ -46,51 +39,58 @@
           <li>
             <button>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
-                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="4" cy="13" r="2.5" />
-                  <circle cx="12" cy="13" r="2.5" />
-                  <path d="M5.741 11.206 13.5.5M10.259 11.206 2.5.5" />
-                </g>
+                <use href="#cut" />
               </svg>
-              Cut
+              <span>Cut</span>
             </button>
           </li>
           <li>
             <button>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
-                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M2.5 3.5h10v12h-10z" />
-                  <path d="M4.5.5h11v13M5.5 6.5h4M5.5 9.5h4M5.5 12.5h4" />
-                </g>
+                <use href="#copy" />
               </svg>
-              Copy
+              <span>Copy</span>
             </button>
           </li>
           <li>
             <button>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">
-                <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                  <path
-                    d="M12.5 1.5h1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-12a1 1 0 0 1 1-1h1"
-                  />
-                  <path d="M5.5.5h5v2h-5zM4.5 6.5h7M4.5 9.5h7M4.5 12.5h7" />
-                </g></svg
-              >Paste
+                <use href="#paste" />
+              </svg>
+              <span>Paste</span>
             </button>
           </li>
         </ul>
       </roving-tabindex>
 
-      <details>
-        <summary>Source</summary>
-        <pre><code>&lt;roving-tabindex selector="button"&gt;
-  &lt;ul&gt;
-    &lt;li&gt;&lt;button&gt;One&lt;/button&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;button&gt;Two&lt;/button&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;button&gt;Three&lt;/button&gt;&lt;/li&gt;
+      <pre class="codeblock"><code>&lt;roving-tabindex selector="button"&gt;
+  &lt;ul class="menu"&gt;
+    &lt;li&gt;
+      &lt;button&gt;
+        &lt;svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"&gt;
+          &lt;use href="#cut" /&gt;
+        &lt;/svg&gt;
+        &lt;span&gt;Cut&lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;button&gt;
+        &lt;svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"&gt;
+          &lt;use href="#copy" /&gt;
+        &lt;/svg&gt;
+        &lt;span&gt;Copy&lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/li&gt;
+    &lt;li&gt;
+      &lt;button&gt;
+        &lt;svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"&gt;
+          &lt;use href="#paste" /&gt;
+        &lt;/svg&gt;
+        &lt;span&gt;Paste&lt;/span&gt;
+      &lt;/button&gt;
+    &lt;/li&gt;
   &lt;/ul&gt;
 &lt;/roving-tabindex&gt;</code></pre>
-      </details>
 
       <h2 id="installation"><a href="#installation">Installation</a></h2>
 
@@ -490,5 +490,37 @@
         </tbody>
       </table>
     </div>
+
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+      <symbol id="github" width="16" height="16" viewBox="0 0 16 16">
+        <path fill="currentColor" fill-rule="evenodd" d="M8 .2c-4.4 0-8 3.6-8 8 0 3.5 2.3 6.5 5.5
+        7.6.4.1.5-.2.5-.4V14c-2.2.5-2.7-1-2.7-1-.4-.9-.9-1.2-.9-1.2-.7-.5.1-.5.1-.5.8.1 1.2.8
+        1.2.8.7 1.3 1.9.9 2.3.7.1-.5.3-.9.5-1.1-1.8-.2-3.6-.9-3.6-4 0-.9.3-1.6.8-2.1-.1-.2-.4-1
+        .1-2.1 0 0 .7-.2 2.2.8.6-.2 1.3-.3 2-.3s1.4.1 2 .3c1.5-1 2.2-.8 2.2-.8.4 1.1.2 1.9.1
+        2.1.5.6.8 1.3.8 2.1 0 3.1-1.9 3.7-3.7 3.9.3.4.6.9.6 1.6v2.2c0 .2.1.5.6.4 3.2-1.1 5.5-4.1
+        5.5-7.6-.1-4.4-3.7-8-8.1-8z" clip-rule="evenodd" / >
+      </symbol>
+      <symbol id="cut" width="16" height="16" viewBox="0 0 16 16">
+        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="4" cy="13" r="2.5" />
+          <circle cx="12" cy="13" r="2.5" />
+          <path d="M5.741 11.206 13.5.5M10.259 11.206 2.5.5" />
+        </g>
+      </symbol>
+      <symbol id="copy" width="16" height="16" viewBox="0 0 16 16">
+        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2.5 3.5h10v12h-10z" />
+          <path d="M4.5.5h11v13M5.5 6.5h4M5.5 9.5h4M5.5 12.5h4" />
+        </g>
+      </symbol>
+      <symbol id="paste" width="16" height="16" viewBox="0 0 16 16">
+        <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+          <path
+            d="M12.5 1.5h1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-12a1 1 0 0 1 1-1h1"
+          />
+          <path d="M5.5.5h5v2h-5zM4.5 6.5h7M4.5 9.5h7M4.5 12.5h7" />
+        </g>
+      </symbol>
+    </svg>
   </body>
 </html>
