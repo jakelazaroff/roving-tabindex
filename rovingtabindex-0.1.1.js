@@ -20,15 +20,15 @@ customElements.define(
 
       switch (evt.type) {
         case "keydown":
-          if (evt instanceof KeyboardEvent) this.#handleKeydown(evt);
+          if (evt instanceof KeyboardEvent) this.#onkeydown(evt);
           break;
 
         case "focusin":
-          if (evt instanceof FocusEvent) this.#handleFocusIn(evt);
+          if (evt instanceof FocusEvent) this.#onfocusin(evt);
           break;
 
         case "rove":
-          if (evt instanceof CustomEvent) this.#handleRove(evt);
+          if (evt instanceof CustomEvent) this.#onrove(evt);
           break;
       }
     }
@@ -48,7 +48,7 @@ customElements.define(
     }
 
     /** @param {KeyboardEvent} evt */
-    #handleKeydown(evt) {
+    #onkeydown(evt) {
       const direction = this.#direction;
       switch (evt.key) {
         case "ArrowLeft":
@@ -81,7 +81,7 @@ customElements.define(
     }
 
     /** @param {FocusEvent} evt */
-    #handleFocusIn(evt) {
+    #onfocusin(evt) {
       if (!(evt.target instanceof HTMLElement)) return;
 
       const idx = [...this.#elements].indexOf(evt.target);
@@ -96,10 +96,10 @@ customElements.define(
     }
 
     /** @param {CustomEvent<{ rows?: number; cols?: number }>} evt */
-    #handleRove(evt) {
-      let { rows: x, cols: y } = evt.detail;
-      if (typeof x === "number" && Boolean(x)) this.#moveHorizontal(x);
-      if (typeof y === "number" && Boolean(y)) this.#moveVertical(y);
+    #onrove(evt) {
+      let { rows, cols } = evt.detail;
+      if (typeof cols === "number" && Boolean(cols)) this.#moveHorizontal(cols);
+      if (typeof rows === "number" && Boolean(rows)) this.#moveVertical(rows);
     }
 
     /** @param {number} n */
@@ -171,17 +171,21 @@ customElements.define(
     }
 
     #collect() {
-      // get the currently focused element
-      const focused = this.#elements[this.#focused];
+      // get the last element that had focus
+      let focused = this.#elements[this.#focused];
 
       // remove tabindex from all the elements
       for (const el of this.#elements) {
         el.removeAttribute("tabindex");
       }
 
-      // get the new elements
+      // get the new set of elements
       const selector = this.getAttribute("selector") || ":root";
       this.#elements = this.querySelectorAll(selector);
+
+      // if the element that currently has focus is in the new set of elements, use that instead
+      const active = /** @type {HTMLElement} */ (document.activeElement);
+      if (new Set(this.#elements).has(active)) focused = active;
 
       // update the index of the focused element
       this.#focused = [...this.#elements].indexOf(focused);
@@ -191,7 +195,9 @@ customElements.define(
         el.tabIndex = -1;
       }
 
+      // set the tabindex of the last focused element to 0
       if (focused) focused.tabIndex = 0;
+      // if no element last had focus, set it to the first element in the set
       else if (this.#elements[0]) this.#elements[0].tabIndex = 0;
     }
 
