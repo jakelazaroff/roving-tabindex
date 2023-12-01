@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>test</title>
+    <script type="module" src="./test.js"></script>
+  </head>
+  <body>
+    <test-suite sync data-testid="suite">
+      <test-block name="keyboard navigation" sync>
+        <script type="sandbox:module" src="./rovingtabindex-0.1.1.js"></script>
+        <roving-tabindex selector="button">
+          <button id="one">one</button>
+          <button id="two">two</button>
+          <button id="three">three</button>
+        </roving-tabindex>
+        <style>
+          :focus {
+            outline: 2px solid blue;
+            outline-offset: 2px;
+          }
+        </style>
+
+        <script type="before" slot="test">
+          await customElements.whenDefined("roving-tabindex");
+          rt = document.querySelector("roving-tabindex");
+          one = document.querySelector("#one");
+          two = document.querySelector("#two");
+          three = document.querySelector("#three");
+        </script>
+
+        <script type="test" slot="test" test="moves focus forward on down and right">
+          one.focus();
+
+          document.activeElement.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowRight" }));
+          assert(document.activeElement === two, "focus should be on #two");
+          for (const el of rt.elements) assert(el.tabIndex === (el === document.activeElement ? 0 : -1), "incorrect tabindex");
+
+          document.activeElement.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowDown" }));
+          assert(document.activeElement === three, "focus should be on #three");
+          for (const el of rt.elements) assert(el.tabIndex === (el === document.activeElement ? 0 : -1), "incorrect tabindex");
+        </script>
+
+        <script type="test" slot="test" test="moves focus backward on up and left">
+          three.focus();
+
+          document.activeElement.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowLeft" }));
+          assert(document.activeElement === two, "focus should be on #two");
+          for (const el of rt.elements) assert(el.tabIndex === (el === document.activeElement ? 0 : -1), "incorrect tabindex");
+
+          document.activeElement.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowUp" }));
+          assert(document.activeElement === one, "focus should be on #one");
+          for (const el of rt.elements) assert(el.tabIndex === (el === document.activeElement ? 0 : -1), "incorrect tabindex");
+        </script>
+
+        <script type="test" slot="test" test="moves focus to beginning on home">
+          three.focus();
+
+          document.activeElement.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "Home" }));
+          assert(document.activeElement === one, "focus should be on #one");
+          for (const el of rt.elements) assert(el.tabIndex === (el === document.activeElement ? 0 : -1), "incorrect tabindex");
+        </script>
+
+        <script type="test" slot="test" test="moves focus to end on end">
+          one.focus();
+
+          document.activeElement.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "End" }));
+          assert(document.activeElement === three, "focus should be on #three");
+          for (const el of rt.elements) assert(el.tabIndex === (el === document.activeElement ? 0 : -1), "incorrect tabindex");
+        </script>
+      </test-block>
+      <test-block name="dom mutations" sync>
+        <script type="sandbox:module" src="./rovingtabindex-0.1.1.js"></script>
+        <roving-tabindex selector="button">
+          <button id="one">one</button>
+          <button id="two">two</button>
+        </roving-tabindex>
+        <style>
+          :focus {
+            outline: 2px solid blue;
+            outline-offset: 2px;
+          }
+        </style>
+
+        <script type="before" slot="test">
+          await customElements.whenDefined("roving-tabindex");
+          rt = document.querySelector("roving-tabindex");
+          one = document.querySelector("#one");
+          two = document.querySelector("#two");
+
+          added = document.createElement("button");
+          added.id = "added";
+          added.innerText = "added";
+        </script>
+
+        <script type="test" slot="test" test="handles new elements being added">
+          two.focus();
+
+          rt.append(added);
+          await tick();
+
+          document.activeElement.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowRight" }));
+          assert(document.activeElement === added, "focus should be on #added");
+          for (const el of rt.elements) assert(el.tabIndex === (el === document.activeElement ? 0 : -1), "incorrect tabindex");
+        </script>
+
+        <script type="test" slot="test" test="retains tabindex when elements are removed">
+          rt.removeChild(two);
+          await tick();
+
+          assert(document.activeElement === added, "focus should be on #added");
+          for (const el of rt.elements) assert(el.tabIndex === (el === document.activeElement ? 0 : -1), "incorrect tabindex");
+        </script>
+      </test-block>
+    </test-suite>
+  </body>
+</html>

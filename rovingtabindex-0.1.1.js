@@ -4,10 +4,12 @@ customElements.define(
     static #DIRECTIONS = new Set(["vertical", "horizontal", "both", "grid"]);
 
     #observer = new MutationObserver(() => this.#collect());
-
-    /** @type {NodeListOf<HTMLElement>} */
-    #elements = this.querySelectorAll(":root");
+    #elements = /** @type {HTMLElement[]} */ ([]);
     #focused = -1;
+
+    get elements() {
+      return this.#elements;
+    }
 
     focus() {
       this.#elements[this.#focused]?.focus();
@@ -171,34 +173,39 @@ customElements.define(
     }
 
     #collect() {
-      // get the last element that had focus
-      let focused = this.#elements[this.#focused];
-
       // remove tabindex from all the elements
       for (const el of this.#elements) {
         el.removeAttribute("tabindex");
       }
 
+      // get the last element that had focus
+      /** @type {HTMLElement | undefined} */
+      let focused = this.#elements[this.#focused];
+
       // get the new set of elements
       const selector = this.getAttribute("selector") || ":root";
-      this.#elements = this.querySelectorAll(selector);
+      this.#elements = /** @type {HTMLElement[]} */ ([...this.querySelectorAll(selector)]);
 
       // if the element that currently has focus is in the new set of elements, use that instead
       const active = /** @type {HTMLElement} */ (document.activeElement);
       if (new Set(this.#elements).has(active)) focused = active;
 
+      // if neither the previously focused nor active element is in the new set, try to find an element with data-tabindex-0
+      if (!focused) focused = this.#elements.find(el => "tabindex-0" in el.dataset);
+
+      // if there is *still* no focused element, use the first element in the new set
+      if (!focused) focused = this.#elements[0];
+
       // update the index of the focused element
-      this.#focused = [...this.#elements].indexOf(focused);
+      this.#focused = focused ? [...this.#elements].indexOf(focused) : -1;
 
       // update the tabindex of the elements
       for (const el of this.#elements) {
         el.tabIndex = -1;
       }
 
-      // set the tabindex of the last focused element to 0
+      // set the tabindex of the focused element to 0
       if (focused) focused.tabIndex = 0;
-      // if no element last had focus, set it to the first element in the set
-      else if (this.#elements[0]) this.#elements[0].tabIndex = 0;
     }
 
     attributeChangedCallback() {
