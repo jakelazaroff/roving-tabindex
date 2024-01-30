@@ -13,7 +13,7 @@ const test = configure.extend({
 });
 
 test("test suite passes", async ({ page }) => {
-  await page.goto("http://localhost:8080/test.html");
+  await page.goto("http://localhost:8080/test/test.html");
   expect(page.getByTestId("suite")).toHaveAttribute("status", "passed");
   await page.waitForTimeout(100);
 });

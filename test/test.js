@@ -1,10 +1,19 @@
 customElements.define(
   "test-sandbox",
-  class extends HTMLElement {
+  class TestSandbox extends HTMLElement {
+    /**
+     * @param {HTMLSlotElement} slot
+     * @returns {Element[]}
+     */
+    static unslot(slot) {
+      return slot.assignedElements().flatMap(el => (el instanceof HTMLSlotElement ? TestSandbox.unslot(el) : el));
+    }
+
     #shadow = this.attachShadow({ mode: "closed" });
 
     constructor() {
       super();
+
       this.#shadow.innerHTML = `
         <slot></slot>
         <iframe part="frame" srcdoc=""></iframe>
@@ -15,38 +24,35 @@ customElements.define(
         </style>
       `;
 
-      this.addEventListener("slotchange", this);
-    }
-
-    handleEvent(evt) {
-      if (evt.type === "slotchange") this.#render();
+      // set the iframe sandbox attribute
+      const sandbox = this.getAttribute("sandbox");
+      if (sandbox) this.#iframe.setAttribute("sandbox", sandbox);
     }
 
     get window() {
-      return this.#shadow.querySelector("iframe").contentWindow;
+      return this.#iframe.contentWindow;
+    }
+
+    get #iframe() {
+      return /** @type {HTMLIFrameElement} */ (this.#shadow.querySelector("iframe"));
     }
 
     #render() {
-      const iframe = this.#shadow.querySelector("iframe");
-      if (this.hasAttribute("sandbox")) iframe.sandbox = this.getAttribute("sandbox");
+      this.ready = new Promise(resolve => (this.#iframe.onload = resolve));
 
-      this.ready = new Promise(resolve => (iframe.onload = resolve));
-
-      const contents = this.#shadow
-        .querySelector("slot")
-        .assignedElements()
-        .flatMap(el => (el instanceof HTMLSlotElement ? el.assignedElements() : el))
-        .map(el => el.cloneNode(true));
+      const slot = this.#shadow.querySelector("slot");
+      const slotted = slot ? TestSandbox.unslot(slot) : [];
+      const contents = slotted.map(el => /** @type {Element} */ (el.cloneNode(true)));
 
       for (const el of contents) {
-        if (el.tagName === "SCRIPT") el.type = el.type.replace(/^sandbox:?/, "");
-        if (el.tagName === "STYLE") el.type = el.type.replace(/^sandbox:?/, "");
+        if (el instanceof HTMLScriptElement || el instanceof HTMLStyleElement)
+          el.type = el.type.replace(/^sandbox:?/, "");
       }
 
       const body = contents.map(el => el.outerHTML).join("\n");
       const lang = this.getAttribute("lang") || "en";
 
-      iframe.srcdoc = `
+      this.#iframe.srcdoc = `
         <!DOCTYPE html>
         <html lang="${lang}">
           <body>
@@ -56,6 +62,10 @@ customElements.define(
       `;
 
       return this.ready;
+    }
+
+    connectedCallback() {
+      this.#render();
     }
   }
 );

@@ -7,7 +7,10 @@
   <body>
     <test-suite sync data-testid="suite">
       <test-block name="keyboard navigation" sync>
-        <script type="sandbox:module" src="./rovingtabindex-0.1.1.js"></script>
+        <script type="sandbox:module">
+          import RovingTabindex from "../rovingtabindex-0.1.1.js";
+          RovingTabindex.register();
+        </script>
         <roving-tabindex selector="button">
           <button id="one">one</button>
           <button id="two">two</button>
@@ -69,7 +72,10 @@
         </script>
       </test-block>
       <test-block name="dom mutations" sync>
-        <script type="sandbox:module" src="./rovingtabindex-0.1.1.js"></script>
+        <script type="sandbox:module">
+          import RovingTabindex from "../rovingtabindex-0.1.1.js";
+          RovingTabindex.register();
+        </script>
         <roving-tabindex selector="button">
           <button id="one">one</button>
           <button id="two">two</button>
