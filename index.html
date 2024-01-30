@@ -6,12 +6,16 @@
     <meta name="color-scheme" content="light dark" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="./style.css" />
-    <script src="./rovingtabindex-0.1.1.js" type="module"></script>
+    <script type="module">
+      import RovingTabIndex from "./rovingtabindex-0.2.0.js";
+      RovingTabIndex.register();
+    </script>
   </head>
+
   <body>
     <div class="content">
       <header>
-        <h1>Roving tabindex <span class="version">0.1.1</span></h1>
+        <h1>Roving tabindex <span class="version">0.2.0</span></h1>
 
         <a class="github" href="https://github.com/jakelazaroff/roving-tabindex/">
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
@@ -23,9 +27,9 @@
 
       <p>
         A simple <a href="https://adactio.com/journal/20618">HTML web component</a> that implements the
-        <a href="https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex"
-          >roving tabindex pattern</a
-        >
+        <a href="https://www.w3.org/WAI/ARIA/apg/practices/keyboard-interface/#kbd_roving_tabindex">
+          roving tabindex pattern
+        </a>
         for building accessible menus and grids.
       </p>
       <p>Wrap it around some markup and give it a selector to determine which elements become navigable!</p>
@@ -60,58 +64,70 @@
       </roving-tabindex>
 
       <pre class="codeblock"><code>&lt;roving-tabindex selector="button"&gt;
-  &lt;ul class="menu" role="toolbar" aria-label="toolbar example"&gt;
-    &lt;li&gt;
-      &lt;button&gt;
-        &lt;svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"&gt;
-          &lt;use href="#cut" /&gt;
-        &lt;/svg&gt;
-        &lt;span&gt;Cut&lt;/span&gt;
-      &lt;/button&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-      &lt;button&gt;
-        &lt;svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"&gt;
-          &lt;use href="#copy" /&gt;
-        &lt;/svg&gt;
-        &lt;span&gt;Copy&lt;/span&gt;
-      &lt;/button&gt;
-    &lt;/li&gt;
-    &lt;li&gt;
-      &lt;button&gt;
-        &lt;svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"&gt;
-          &lt;use href="#paste" /&gt;
-        &lt;/svg&gt;
-        &lt;span&gt;Paste&lt;/span&gt;
-      &lt;/button&gt;
-    &lt;/li&gt;
-  &lt;/ul&gt;
+    &lt;ul class="menu" role="toolbar" aria-label="toolbar example"&gt;
+        &lt;li&gt;
+            &lt;button&gt;
+                &lt;svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"&gt;
+                    &lt;use href="#cut" /&gt;
+                &lt;/svg&gt;
+                &lt;span&gt;Cut&lt;/span&gt;
+            &lt;/button&gt;
+        &lt;/li&gt;
+        &lt;li&gt;
+            &lt;button&gt;
+                &lt;svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"&gt;
+                    &lt;use href="#copy" /&gt;
+                &lt;/svg&gt;
+                &lt;span&gt;Copy&lt;/span&gt;
+            &lt;/button&gt;
+        &lt;/li&gt;
+        &lt;li&gt;
+            &lt;button&gt;
+                &lt;svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"&gt;
+                    &lt;use href="#paste" /&gt;
+                &lt;/svg&gt;
+                &lt;span&gt;Paste&lt;/span&gt;
+            &lt;/button&gt;
+        &lt;/li&gt;
+    &lt;/ul&gt;
 &lt;/roving-tabindex&gt;</code></pre>
 
       <h2 id="usage"><a href="#usage">Usage</a></h2>
 
       <p>
-        First, download
-        <a target="_blank" href="./rovingtabindex-0.1.1.js"><code>roving-tabindex-0.1.1.js</code></a>
-        and link to it on your page.
+        <code>&lt;roving-tabindex&gt;</code> isn't on NPM; instead, you install it by downloading
+        <a target="_blank" href="./rovingtabindex-0.2.0.js"><code>roving-tabindex-0.2.0.js</code></a>
+        and adding it to your codebase. The default export is a class with a static <code>register</code> method:
       </p>
 
-      <pre
-        class="codeblock"
-      ><code>&lt;script type="module" src="/rovingtabindex-0.1.1.js"&gt;&lt;script/&gt;</code></pre>
+      <pre class="codeblock"><code>&lt;script type="module"&gt;
+  import RovingTabindex from "/rovingtabindex-0.2.0.js";
+  RovingTabIndex.register();
+&lt;script/&gt;</code></pre>
 
       <p>
-        Then, wrap <code>&lt;roving-tabindex&gt;</code> around the markup for which you want arrow key navigation. Use
-        the <code>selector</code> prop to determine which descendant elements should be included.
+        By default, it registers the tag name <code>&lt;roving-tabindex&gt;</code>. You can customize it by passing a
+        different string:
+      </p>
+
+      <pre class="codeblock"><code>&lt;script type="module"&gt;
+  import RovingTabindex from "/rovingtabindex-0.2.0.js";
+  RovingTabIndex.register("other-tagname");
+&lt;script/&gt;</code></pre>
+
+      <p>
+        Once you've registered the tag, wrap <code>&lt;roving-tabindex&gt;</code> (or whatever name you chose) around
+        the markup for which you want arrow key navigation. Use the <code>selector</code> prop to determine which
+        descendant elements should be included.
       </p>
 
       <pre class="codeblock"><code>&lt;roving-tabindex selector="button, a" direction="horziontal"&gt;
-  &lt;ul class="menu" role="toolbar" aria-label="toolbar-example"&gt;
-    &lt;li&gt;&lt;button&gt;One&lt;/button&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;button&gt;Two&lt;/button&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;button&gt;Three&lt;/button&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#"&gt;Link&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
+    &lt;ul class="menu" role="toolbar" aria-label="toolbar-example"&gt;
+        &lt;li&gt;&lt;button&gt;One&lt;/button&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;button&gt;Two&lt;/button&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;button&gt;Three&lt;/button&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Link&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
 &lt;/roving-tabindex&gt;</code></pre>
 
       <p>
@@ -147,12 +163,12 @@
       <details>
         <summary>Source</summary>
         <pre class="prescroll"><code>&lt;roving-tabindex selector="button, a" direction="horziontal"&gt;
-  &lt;ul class="menu" role="toolbar" aria-label="toolbar-example"&gt;
-    &lt;li&gt;&lt;button&gt;One&lt;/button&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;button&gt;Two&lt;/button&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;button&gt;Three&lt;/button&gt;&lt;/li&gt;
-    &lt;li&gt;&lt;a href="#"&gt;Link&lt;/a&gt;&lt;/li&gt;
-  &lt;/ul&gt;
+    &lt;ul class="menu" role="toolbar" aria-label="toolbar-example"&gt;
+        &lt;li&gt;&lt;button&gt;One&lt;/button&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;button&gt;Two&lt;/button&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;button&gt;Three&lt;/button&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a href="#"&gt;Link&lt;/a&gt;&lt;/li&gt;
+    &lt;/ul&gt;
 &lt;/roving-tabindex&gt;</code></pre>
       </details>
 
@@ -294,112 +310,112 @@
       <details>
         <summary>Source</summary>
         <pre class="prescroll"><code>&lt;roving-tabindex selector="label" direction="grid" columns="5"&gt;
-  &lt;table id="spreadsheet"&gt;
-    &lt;thead&gt;
-      &lt;tr&gt;
-        &lt;th width="0"&gt;&lt;/th&gt;
-        &lt;th width="20%"&gt;A&lt;/th&gt;
-        &lt;th width="20%"&gt;B&lt;/th&gt;
-        &lt;th width="20%"&gt;C&lt;/th&gt;
-        &lt;th width="20%"&gt;D&lt;/th&gt;
-        &lt;th width="20%"&gt;E&lt;/th&gt;
-      &lt;/tr&gt;
-    &lt;/thead&gt;
-    &lt;tbody&gt;
-      &lt;tr&gt;
-        &lt;th&gt;1&lt;/th&gt;
-        &lt;td&gt;&lt;label for="a1"&gt;&lt;/label&gt;&lt;input class="hidden" id="a1" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="a2"&gt;&lt;/label&gt;&lt;input class="hidden" id="a2" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="a3"&gt;&lt;/label&gt;&lt;input class="hidden" id="a3" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="a4"&gt;&lt;/label&gt;&lt;input class="hidden" id="a4" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="a5"&gt;&lt;/label&gt;&lt;input class="hidden" id="a5" /&gt;&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;th&gt;2&lt;/th&gt;
-        &lt;td&gt;&lt;label for="b1"&gt;&lt;/label&gt;&lt;input class="hidden" id="b1" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="b2"&gt;&lt;/label&gt;&lt;input class="hidden" id="b2" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="b3"&gt;&lt;/label&gt;&lt;input class="hidden" id="b3" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="b4"&gt;&lt;/label&gt;&lt;input class="hidden" id="b4" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="b5"&gt;&lt;/label&gt;&lt;input class="hidden" id="b5" /&gt;&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;th&gt;3&lt;/th&gt;
-        &lt;td&gt;&lt;label for="c1"&gt;&lt;/label&gt;&lt;input class="hidden" id="c1" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="c2"&gt;&lt;/label&gt;&lt;input class="hidden" id="c2" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="c3"&gt;&lt;/label&gt;&lt;input class="hidden" id="c3" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="c4"&gt;&lt;/label&gt;&lt;input class="hidden" id="c4" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="c5"&gt;&lt;/label&gt;&lt;input class="hidden" id="c5" /&gt;&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;th&gt;4&lt;/th&gt;
-        &lt;td&gt;&lt;label for="d1"&gt;&lt;/label&gt;&lt;input class="hidden" id="d1" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="d2"&gt;&lt;/label&gt;&lt;input class="hidden" id="d2" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="d3"&gt;&lt;/label&gt;&lt;input class="hidden" id="d3" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="d4"&gt;&lt;/label&gt;&lt;input class="hidden" id="d4" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="d5"&gt;&lt;/label&gt;&lt;input class="hidden" id="d5" /&gt;&lt;/td&gt;
-      &lt;/tr&gt;
-      &lt;tr&gt;
-        &lt;th&gt;5&lt;/th&gt;
-        &lt;td&gt;&lt;label for="a1"&gt;&lt;/label&gt;&lt;input class="hidden" id="e1" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="a2"&gt;&lt;/label&gt;&lt;input class="hidden" id="e2" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="a3"&gt;&lt;/label&gt;&lt;input class="hidden" id="e3" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="a4"&gt;&lt;/label&gt;&lt;input class="hidden" id="e4" /&gt;&lt;/td&gt;
-        &lt;td&gt;&lt;label for="a5"&gt;&lt;/label&gt;&lt;input class="hidden" id="e5" /&gt;&lt;/td&gt;
-      &lt;/tr&gt;
-    &lt;/tbody&gt;
-  &lt;/table&gt;
-&lt;/roving-tabindex&gt;
+                    &lt;table id="spreadsheet"&gt;
+                    &lt;thead&gt;
+                    &lt;tr&gt;
+                    &lt;th width="0"&gt;&lt;/th&gt;
+                    &lt;th width="20%"&gt;A&lt;/th&gt;
+                    &lt;th width="20%"&gt;B&lt;/th&gt;
+                    &lt;th width="20%"&gt;C&lt;/th&gt;
+                    &lt;th width="20%"&gt;D&lt;/th&gt;
+                    &lt;th width="20%"&gt;E&lt;/th&gt;
+                    &lt;/tr&gt;
+                    &lt;/thead&gt;
+                    &lt;tbody&gt;
+                    &lt;tr&gt;
+                    &lt;th&gt;1&lt;/th&gt;
+                    &lt;td&gt;&lt;label for="a1"&gt;&lt;/label&gt;&lt;input class="hidden" id="a1" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="a2"&gt;&lt;/label&gt;&lt;input class="hidden" id="a2" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="a3"&gt;&lt;/label&gt;&lt;input class="hidden" id="a3" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="a4"&gt;&lt;/label&gt;&lt;input class="hidden" id="a4" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="a5"&gt;&lt;/label&gt;&lt;input class="hidden" id="a5" /&gt;&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                    &lt;th&gt;2&lt;/th&gt;
+                    &lt;td&gt;&lt;label for="b1"&gt;&lt;/label&gt;&lt;input class="hidden" id="b1" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="b2"&gt;&lt;/label&gt;&lt;input class="hidden" id="b2" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="b3"&gt;&lt;/label&gt;&lt;input class="hidden" id="b3" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="b4"&gt;&lt;/label&gt;&lt;input class="hidden" id="b4" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="b5"&gt;&lt;/label&gt;&lt;input class="hidden" id="b5" /&gt;&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                    &lt;th&gt;3&lt;/th&gt;
+                    &lt;td&gt;&lt;label for="c1"&gt;&lt;/label&gt;&lt;input class="hidden" id="c1" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="c2"&gt;&lt;/label&gt;&lt;input class="hidden" id="c2" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="c3"&gt;&lt;/label&gt;&lt;input class="hidden" id="c3" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="c4"&gt;&lt;/label&gt;&lt;input class="hidden" id="c4" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="c5"&gt;&lt;/label&gt;&lt;input class="hidden" id="c5" /&gt;&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                    &lt;th&gt;4&lt;/th&gt;
+                    &lt;td&gt;&lt;label for="d1"&gt;&lt;/label&gt;&lt;input class="hidden" id="d1" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="d2"&gt;&lt;/label&gt;&lt;input class="hidden" id="d2" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="d3"&gt;&lt;/label&gt;&lt;input class="hidden" id="d3" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="d4"&gt;&lt;/label&gt;&lt;input class="hidden" id="d4" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="d5"&gt;&lt;/label&gt;&lt;input class="hidden" id="d5" /&gt;&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;tr&gt;
+                    &lt;th&gt;5&lt;/th&gt;
+                    &lt;td&gt;&lt;label for="a1"&gt;&lt;/label&gt;&lt;input class="hidden" id="e1" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="a2"&gt;&lt;/label&gt;&lt;input class="hidden" id="e2" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="a3"&gt;&lt;/label&gt;&lt;input class="hidden" id="e3" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="a4"&gt;&lt;/label&gt;&lt;input class="hidden" id="e4" /&gt;&lt;/td&gt;
+                    &lt;td&gt;&lt;label for="a5"&gt;&lt;/label&gt;&lt;input class="hidden" id="e5" /&gt;&lt;/td&gt;
+                    &lt;/tr&gt;
+                    &lt;/tbody&gt;
+                    &lt;/table&gt;
+                    &lt;/roving-tabindex&gt;
 
-&lt;script&gt;
-  spreadsheet.addEventListener("keydown", evt =&gt; {
-    if (evt.target instanceof HTMLLabelElement) {
-      switch (evt.key) {
-        // send arrow keys and home/end through to &lt;roving-tabindex&gt;
-        case "ArrowUp":
-        case "ArrowDown":
-        case "ArrowLeft":
-        case "ArrowRight":
-        case "Home":
-        case "End":
-          break;
+                    &lt;script&gt;
+                    spreadsheet.addEventListener("keydown", evt =&gt; {
+                    if (evt.target instanceof HTMLLabelElement) {
+                    switch (evt.key) {
+                    // send arrow keys and home/end through to &lt;roving-tabindex&gt;
+                    case "ArrowUp":
+                    case "ArrowDown":
+                    case "ArrowLeft":
+                    case "ArrowRight":
+                    case "Home":
+                    case "End":
+                    break;
 
-        // for all other keys, swap in the corresponding &lt;input&gt; element
-        default:
-          const input = spreadsheet.querySelector("#" + evt.target.htmlFor);
-          evt.target.classList.add("hidden");
-          input.classList.remove("hidden");
-          input.focus();
-          break;
-      }
-    }
+                    // for all other keys, swap in the corresponding &lt;input&gt; element
+                    default:
+                    const input = spreadsheet.querySelector("#" + evt.target.htmlFor);
+                    evt.target.classList.add("hidden");
+                    input.classList.remove("hidden");
+                    input.focus();
+                    break;
+                    }
+                    }
 
-    if (evt.target instanceof HTMLInputElement) {
-      // stop keydown events on &lt;input&gt; elements from reaching &lt;roving-tabindex&gt;
-      evt.stopPropagation();
+                    if (evt.target instanceof HTMLInputElement) {
+                    // stop keydown events on &lt;input&gt; elements from reaching &lt;roving-tabindex&gt;
+                    evt.stopPropagation();
 
-      const label = spreadsheet.querySelector(`[for="${evt.target.id}"]`);
-      switch (evt.key) {
-        case "Enter":
-          label.innerText = evt.target.value;
-        // fallthrough
-        case "Escape":
-          evt.target.classList.add("hidden");
-          label.classList.remove("hidden");
-          label.focus();
-          break;
-      }
-    }
-  });
+                    const label = spreadsheet.querySelector(`[for="${evt.target.id}"]`);
+                    switch (evt.key) {
+                    case "Enter":
+                    label.innerText = evt.target.value;
+                    // fallthrough
+                    case "Escape":
+                    evt.target.classList.add("hidden");
+                    label.classList.remove("hidden");
+                    label.focus();
+                    break;
+                    }
+                    }
+                    });
 
-  spreadsheet.addEventListener("focusout", evt =&gt; {
-    if (evt.target instanceof HTMLInputElement) {
-      const label = spreadsheet.querySelector(`[for="${evt.target.id}"]`);
-      label.innerText = evt.target.value;
-      evt.target.classList.add("hidden");
-      label.classList.remove("hidden");
-    }
-  });
-&lt;/script&gt;</code></pre>
+                    spreadsheet.addEventListener("focusout", evt =&gt; {
+                    if (evt.target instanceof HTMLInputElement) {
+                    const label = spreadsheet.querySelector(`[for="${evt.target.id}"]`);
+                    label.innerText = evt.target.value;
+                    evt.target.classList.add("hidden");
+                    label.classList.remove("hidden");
+                    }
+                    });
+                    &lt;/script&gt;</code></pre>
       </details>
 
       <h2 id="api"><a href="#api">API</a></h2>
@@ -448,6 +464,11 @@
             <td><code>columns</code></td>
             <td>The number of columns each grid row has.</td>
             <td>0</td>
+          </tr>
+          <tr>
+            <td><code>loop</code></td>
+            <td>Whether to wrap around to the beginning of the selection when moving past the end, and vice versa.</td>
+            <td>false</td>
           </tr>
         </tbody>
       </table>
@@ -501,11 +522,16 @@
 
     <svg id="symbols" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
       <symbol id="github" width="16" height="16" viewBox="0 0 16 16">
-        <path fill="currentColor" fill-rule="evenodd" d="M8 .2c-4.4 0-8 3.6-8 8 0 3.5 2.3 6.5 5.5
+        <path
+          fill="currentColor"
+          fill-rule="evenodd"
+          d="M8 .2c-4.4 0-8 3.6-8 8 0 3.5 2.3 6.5 5.5
         7.6.4.1.5-.2.5-.4V14c-2.2.5-2.7-1-2.7-1-.4-.9-.9-1.2-.9-1.2-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.3 1.9.9
         2.3.7.1-.5.3-.9.5-1.1-1.8-.2-3.6-.9-3.6-4 0-.9.3-1.6.8-2.1-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8.6-.2 1.3-.3
         2-.3s1.4.1 2 .3c1.5-1 2.2-.8 2.2-.8.4 1.1.2 1.9.1 2.1.5.6.8 1.3.8 2.1 0 3.1-1.9 3.7-3.7 3.9.3.4.6.9.6 1.6v2.2c0
-        .2.1.5.6.4 3.2-1.1 5.5-4.1 5.5-7.6-.1-4.4-3.7-8-8.1-8z" clip-rule="evenodd" / >
+        .2.1.5.6.4 3.2-1.1 5.5-4.1 5.5-7.6-.1-4.4-3.7-8-8.1-8z"
+          clip-rule="evenodd"
+        />
       </symbol>
       <symbol id="cut" width="16" height="16" viewBox="0 0 16 16">
         <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
