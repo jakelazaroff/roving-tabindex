@@ -1,9 +1,21 @@
 export default class RovingTabindex extends HTMLElement {
-  static register(tag = "roving-tabindex") {
-    const ce = customElements.get(tag);
-    if (Boolean(ce) && ce !== RovingTabindex) return console.warn(`<${tag}> already registered!`);
+  static tag = "roving-tabindex";
 
-    customElements.define(tag, RovingTabindex);
+  static define(tag = this.tag) {
+    this.tag = tag;
+
+    const name = customElements.getName(this);
+    if (name) return console.warn(`${this.name} already defined as <${name}>!`);
+
+    const ce = customElements.get(tag);
+    if (!!ce && ce !== this) return console.warn(`<${tag}> already defined as ${ce.name}!`);
+
+    customElements.define(tag, this);
+  }
+
+  static {
+    const tag = new URL(import.meta.url).searchParams.get("define") || this.tag;
+    if (tag !== "false") this.define(tag);
   }
 
   static #DIRECTIONS = new Set(["vertical", "horizontal", "both", "grid"]);
@@ -43,8 +55,8 @@ export default class RovingTabindex extends HTMLElement {
   get #direction() {
     /** @typedef {"horizontal" | "vertical" | "both" | "grid"} Direction */
 
-    const direction = this.getAttribute("direction");
-    if (direction && RovingTabindex.#DIRECTIONS.has(direction)) return /** @type {Direction} */ (direction);
+    const dir = this.getAttribute("direction");
+    if (dir && RovingTabindex.#DIRECTIONS.has(dir)) return /** @type {Direction} */ (dir);
 
     return "both";
   }
@@ -108,7 +120,7 @@ export default class RovingTabindex extends HTMLElement {
 
   /** @param {CustomEvent<{ rows?: number; cols?: number }>} evt */
   #onrove(evt) {
-    let { rows, cols } = evt.detail;
+    const { rows, cols } = evt.detail;
     if (typeof cols === "number" && Boolean(cols)) this.#moveHorizontal(cols);
     if (typeof rows === "number" && Boolean(rows)) this.#moveVertical(rows);
   }
@@ -199,9 +211,13 @@ export default class RovingTabindex extends HTMLElement {
     const selector = this.getAttribute("selector") || ":root";
     this.#elements = /** @type {HTMLElement[]} */ ([...this.querySelectorAll(selector)]);
 
+    // if the new set of elements no longer has the focused element, don't use it
+    const els = new Set(this.#elements);
+    if (!els.has(focused)) focused = undefined;
+
     // if the element that currently has focus is in the new set of elements, use that instead
     const active = /** @type {HTMLElement} */ (document.activeElement);
-    if (new Set(this.#elements).has(active)) focused = active;
+    if (els.has(active)) focused = active;
 
     // if neither the previously focused nor active element is in the new set, try to find an element with data-tabindex-0
     if (!focused) focused = this.#elements.find(el => "tabindex-0" in el.dataset);
