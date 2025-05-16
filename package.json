@@ -1,6 +1,6 @@
 {
   "name": "roving-tabindex",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A simple HTML web component that implements the roving tabindex pattern for building accessible menus and grids.",
   "browser": "roving-tabindex.js",
   "directories": {

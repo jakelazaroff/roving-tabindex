@@ -16,10 +16,24 @@ Wrap it around some markup and give it a selector to determine which elements be
 
 # Installation
 
-`<roving-tabindex>` isn't on NPM; download `roving-tabindex-0.3.0.js` and add it into your codebase.
-The file exports a class with a static `register` method as the default export:
+There are a few ways to install `<roving-tabindex>`.
+
+If you're using a bundler, you can install it from npm:
+
+```sh
+npm install roving-tabindex
+```
+
+You can also import it from a CDN without installing anything:
+
+```html
+<script type="module" src="https://unpkg.com/roving-tabindex/roving-tabindex.js"></script>
+```
+
+Finally, you can "vendor" it by downloading `roving-tabindex.js` and add it into your codebase.
+The file exports a class with a static `define` method as the default export:
 
 ```js
-import RovingTabindex from "./roving-tabindex-0.3.0.js";
-RovingTabindex.register();
+import RovingTabindex from "./roving-tabindex.js";
+RovingTabindex.define();
 ```
