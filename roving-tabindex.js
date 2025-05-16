@@ -28,6 +28,7 @@ export default class RovingTabindex extends HTMLElement {
     return this.#elements;
   }
 
+  /** @override */
   focus() {
     this.#elements[this.#focused]?.focus();
   }
@@ -213,7 +214,7 @@ export default class RovingTabindex extends HTMLElement {
 
     // if the new set of elements no longer has the focused element, don't use it
     const els = new Set(this.#elements);
-    if (!els.has(focused)) focused = undefined;
+    if (focused && !els.has(focused)) focused = undefined;
 
     // if the element that currently has focus is in the new set of elements, use that instead
     const active = /** @type {HTMLElement} */ (document.activeElement);
