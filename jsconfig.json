@@ -4,6 +4,7 @@
     "noEmit": true,
     "target": "esnext",
     "module": "esnext",
+    "moduleResolution": "bundler",
     "maxNodeModuleJsDepth": 0,
     "strict": true,
     "exactOptionalPropertyTypes": true,

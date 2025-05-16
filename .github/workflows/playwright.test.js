@@ -1,15 +1,15 @@
-import { expect, test as configure } from "@playwright/test";
 import path from "node:path";
+import { test as configure, expect } from "@playwright/test";
 
 const test = configure.extend({
   context: async ({ context }, run) => {
     await context.route("**/*", (route, request) =>
       route.fulfill({
-        path: path.join(__dirname, "../..", new URL(request.url()).pathname)
-      })
+        path: path.join(import.meta.dirname, "../..", new URL(request.url()).pathname),
+      }),
     );
     await run(context);
-  }
+  },
 });
 
 test("test suite passes", async ({ page }) => {
