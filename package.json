@@ -1,0 +1,22 @@
+{
+  "name": "roving-tabindex",
+  "version": "0.3.0",
+  "description": "A simple HTML web component that implements the roving tabindex pattern for building accessible menus and grids.",
+  "browser": "roving-tabindex.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jakelazaroff/roving-tabindex.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jakelazaroff/roving-tabindex/issues"
+  },
+  "homepage": "https://github.com/jakelazaroff/roving-tabindex#readme"
+}

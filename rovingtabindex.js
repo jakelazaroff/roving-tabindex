@@ -92,13 +92,13 @@ export default class RovingTabindex extends HTMLElement {
         break;
       case "Home":
         evt.preventDefault();
-        if (evt.ctrlKey && direction === "grid") this.#moveVertical(-Infinity);
-        this.#moveHorizontal(-Infinity);
+        if (evt.ctrlKey && direction === "grid") this.#moveVertical(Number.NEGATIVE_INFINITY);
+        this.#moveHorizontal(Number.NEGATIVE_INFINITY);
         break;
       case "End":
         evt.preventDefault();
-        if (evt.ctrlKey && direction === "grid") this.#moveVertical(Infinity);
-        this.#moveHorizontal(Infinity);
+        if (evt.ctrlKey && direction === "grid") this.#moveVertical(Number.POSITIVE_INFINITY);
+        this.#moveHorizontal(Number.POSITIVE_INFINITY);
         break;
     }
   }
@@ -220,7 +220,7 @@ export default class RovingTabindex extends HTMLElement {
     if (els.has(active)) focused = active;
 
     // if neither the previously focused nor active element is in the new set, try to find an element with data-tabindex-0
-    if (!focused) focused = this.#elements.find(el => "tabindex-0" in el.dataset);
+    if (!focused) focused = this.#elements.find((el) => "tabindex-0" in el.dataset);
 
     // if there is *still* no focused element, use the first element in the new set
     if (!focused) focused = this.#elements[0];
