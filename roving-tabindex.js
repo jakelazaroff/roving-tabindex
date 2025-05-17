@@ -35,8 +35,8 @@ export default class RovingTabindex extends HTMLElement {
 
   /** @param {{ rows?: number; cols?: number }} to */
   rove({ rows, cols }) {
-    if (typeof cols === "number" && Boolean(cols)) this.#moveCol(cols);
-    if (typeof rows === "number" && Boolean(rows)) this.#moveRow(rows);
+    if (typeof cols === "number" && Boolean(cols)) this.#moveRow(cols);
+    if (typeof rows === "number" && Boolean(rows)) this.#moveCol(rows);
   }
 
   /** @param {Event} evt */
@@ -85,7 +85,7 @@ export default class RovingTabindex extends HTMLElement {
    * @param {number} n
    * @param {boolean} [loop]
    */
-  #moveRow(n, loop) {
+  #moveCol(n, loop) {
     // number of columns
     const cols = this.#cols,
       // current column
@@ -98,15 +98,14 @@ export default class RovingTabindex extends HTMLElement {
     // target index
     const idx = this.#clamp(this.#focused + n, start, end, loop);
 
-    const target = this.#elements[idx];
-    if (target) target.focus();
+    this.#elements[idx]?.focus();
   }
 
   /**
    * @param {number} n
    * @param {boolean} [loop]
    */
-  #moveCol(n, loop) {
+  #moveRow(n, loop) {
     // number of columns
     const cols = this.#cols,
       // number of rows
@@ -119,63 +118,62 @@ export default class RovingTabindex extends HTMLElement {
     // target index
     const idx = col + this.#clamp(row + n, 0, rows - 1, loop) * cols;
 
-    const target = this.#elements[idx];
-    if (target) target.focus();
+    this.#elements[idx]?.focus();
   }
 
-  /** @param {KeyboardEvent} evt */
-  #onkeydown(evt) {
+  /** @param {KeyboardEvent} ev */
+  #onkeydown(ev) {
     const dir = this.#direction;
-    switch (evt.key) {
+    switch (ev.key) {
       case "ArrowLeft":
-        evt.preventDefault();
-        if (dir !== "vertical") this.#moveRow(-1);
+        ev.preventDefault();
+        if (dir !== "vertical") this.#moveCol(-1);
         break;
       case "ArrowRight":
-        evt.preventDefault();
-        if (dir !== "vertical") this.#moveRow(+1);
+        ev.preventDefault();
+        if (dir !== "vertical") this.#moveCol(+1);
         break;
       case "ArrowUp":
-        evt.preventDefault();
-        if (dir === "grid") this.#moveCol(-1);
-        else if (dir !== "horizontal") this.#moveRow(-1);
+        ev.preventDefault();
+        if (dir === "grid") this.#moveRow(-1);
+        else if (dir !== "horizontal") this.#moveCol(-1);
         break;
       case "ArrowDown":
-        evt.preventDefault();
-        if (dir === "grid") this.#moveCol(1);
-        else if (dir !== "horizontal") this.#moveRow(1);
+        ev.preventDefault();
+        if (dir === "grid") this.#moveRow(1);
+        else if (dir !== "horizontal") this.#moveCol(1);
         break;
       case "Home":
-        evt.preventDefault();
-        if (evt.ctrlKey && dir === "grid") this.#moveCol(Number.NEGATIVE_INFINITY, false);
-        this.#moveRow(Number.NEGATIVE_INFINITY, false);
+        ev.preventDefault();
+        this.#moveCol(Number.NEGATIVE_INFINITY, false);
+        if (ev.ctrlKey && dir === "grid") this.#moveRow(Number.NEGATIVE_INFINITY, false);
         break;
       case "End":
-        evt.preventDefault();
-        if (evt.ctrlKey && dir === "grid") this.#moveCol(Number.POSITIVE_INFINITY, false);
-        this.#moveRow(Number.POSITIVE_INFINITY, false);
+        ev.preventDefault();
+        this.#moveCol(Number.POSITIVE_INFINITY, false);
+        if (ev.ctrlKey && dir === "grid") this.#moveRow(Number.POSITIVE_INFINITY, false);
         break;
     }
   }
 
-  /** @param {FocusEvent} evt */
-  #onfocusin(evt) {
-    if (!(evt.target instanceof HTMLElement)) return;
+  /** @param {FocusEvent} ev */
+  #onfocusin(ev) {
+    if (!(ev.target instanceof HTMLElement)) return;
 
-    const idx = this.#elements.slice().indexOf(evt.target);
+    const idx = this.#elements.slice().indexOf(ev.target);
     if (idx === -1) return;
 
     for (const el of this.#elements) {
       el.tabIndex = -1;
     }
 
-    evt.target.tabIndex = 0;
+    ev.target.tabIndex = 0;
     this.#focused = idx;
   }
 
-  /** @param {CustomEvent<{ rows?: number; cols?: number }>} evt */
-  #onrove(evt) {
-    this.rove(evt.detail);
+  /** @param {CustomEvent<{ rows?: number; cols?: number }>} ev */
+  #onrove(ev) {
+    this.rove(ev.detail);
   }
 
   #collect() {
