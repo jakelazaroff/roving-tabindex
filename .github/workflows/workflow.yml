@@ -1,4 +1,4 @@
-name: build and push image
+name: Check
 on:
   push:
     branches: [main]
@@ -6,7 +6,7 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  check:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repo
@@ -15,9 +15,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: lts/*
-      - name: Install Playwright
-        run: npm install @playwright/test
-      - name: Install Playwright Browsers
-        run: npx playwright install firefox --with-deps
-      - name: Run Playwright tests
-        run: npx playwright test .github/workflows/playwright.test.js --browser firefox
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npx playwright install firefox --with-deps
+      - run: npm test
+        env:
+          VITE_BROWSER_PROVIDER: playwright
