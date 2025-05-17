@@ -5,13 +5,10 @@
   "main": "roving-tabindex.js",
   "browser": "roving-tabindex.js",
   "type": "module",
-  "directories": {
-    "test": "test"
-  },
   "scripts": {
     "typecheck": "tsc -p jsconfig.json",
     "lint": "biome lint",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest"
   },
   "repository": {
     "type": "git",
@@ -24,7 +21,10 @@
   },
   "homepage": "https://github.com/jakelazaroff/roving-tabindex#readme",
   "devDependencies": {
+    "@types/node": "^22.15.18",
+    "@vitest/browser": "^3.1.3",
     "biome": "^0.3.3",
+    "playwright": "^1.52.0",
     "typescript": "^5.8.3"
   }
 }

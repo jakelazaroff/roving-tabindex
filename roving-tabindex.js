@@ -33,6 +33,12 @@ export default class RovingTabindex extends HTMLElement {
     this.#elements[this.#focused]?.focus();
   }
 
+  /** @param {{ rows?: number; cols?: number }} to */
+  rove({ rows, cols }) {
+    if (typeof cols === "number" && Boolean(cols)) this.#moveHorizontal(cols);
+    if (typeof rows === "number" && Boolean(rows)) this.#moveVertical(rows);
+  }
+
   /** @param {Event} evt */
   handleEvent(evt) {
     if (!(evt.target instanceof HTMLElement)) return;
@@ -108,7 +114,7 @@ export default class RovingTabindex extends HTMLElement {
   #onfocusin(evt) {
     if (!(evt.target instanceof HTMLElement)) return;
 
-    const idx = [...this.#elements].indexOf(evt.target);
+    const idx = this.#elements.slice().indexOf(evt.target);
     if (idx === -1) return;
 
     for (const el of this.#elements) {
@@ -121,9 +127,7 @@ export default class RovingTabindex extends HTMLElement {
 
   /** @param {CustomEvent<{ rows?: number; cols?: number }>} evt */
   #onrove(evt) {
-    const { rows, cols } = evt.detail;
-    if (typeof cols === "number" && Boolean(cols)) this.#moveHorizontal(cols);
-    if (typeof rows === "number" && Boolean(rows)) this.#moveVertical(rows);
+    this.rove(evt.detail);
   }
 
   /** @param {number} n */
@@ -227,7 +231,7 @@ export default class RovingTabindex extends HTMLElement {
     if (!focused) focused = this.#elements[0];
 
     // update the index of the focused element
-    this.#focused = focused ? [...this.#elements].indexOf(focused) : -1;
+    this.#focused = focused ? this.#elements.slice().indexOf(focused) : -1;
 
     // update the tabindex of the elements
     for (const el of this.#elements) {

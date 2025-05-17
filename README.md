@@ -31,7 +31,6 @@ You can also import it from a CDN without installing anything:
 ```
 
 Finally, you can "vendor" it by downloading `roving-tabindex.js` and add it into your codebase.
-The file exports a class with a static `define` method as the default export:
 
 ```js
 import RovingTabindex from "./roving-tabindex.js";
