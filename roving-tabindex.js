@@ -35,8 +35,8 @@ export default class RovingTabindex extends HTMLElement {
 
   /** @param {{ rows?: number; cols?: number }} to */
   rove({ rows, cols }) {
-    if (typeof cols === "number" && Boolean(cols)) this.#moveHorizontal(cols);
-    if (typeof rows === "number" && Boolean(rows)) this.#moveVertical(rows);
+    if (typeof cols === "number" && Boolean(cols)) this.#moveCol(cols);
+    if (typeof rows === "number" && Boolean(rows)) this.#moveRow(rows);
   }
 
   /** @param {Event} evt */
@@ -68,8 +68,12 @@ export default class RovingTabindex extends HTMLElement {
     return "both";
   }
 
+  get #loop() {
+    return this.hasAttribute("loop");
+  }
+
   get #cols() {
-    const cols = Number(this.getAttribute("columns")) || 0;
+    const cols = Number(this.getAttribute("columns")) || this.#elements.length;
     return Math.max(0, Math.min(cols, this.#elements.length));
   }
 
@@ -77,35 +81,79 @@ export default class RovingTabindex extends HTMLElement {
     return Math.floor(this.#elements.length / this.#cols) || 0;
   }
 
+  /**
+   * @param {number} n
+   * @param {boolean} [loop]
+   */
+  #moveRow(n, loop) {
+    // number of columns
+    const cols = this.#cols,
+      // current column
+      col = this.#focused % cols,
+      // first column of current row
+      start = this.#focused - col,
+      // last column of current row
+      end = start + this.#cols - 1;
+
+    // target index
+    const idx = this.#clamp(this.#focused + n, start, end, loop);
+
+    const target = this.#elements[idx];
+    if (target) target.focus();
+  }
+
+  /**
+   * @param {number} n
+   * @param {boolean} [loop]
+   */
+  #moveCol(n, loop) {
+    // number of columns
+    const cols = this.#cols,
+      // number of rows
+      rows = this.#rows,
+      // current column
+      col = this.#focused % cols,
+      // current row
+      row = Math.floor(this.#focused / rows);
+
+    // target index
+    const idx = col + this.#clamp(row + n, 0, rows - 1, loop) * cols;
+
+    const target = this.#elements[idx];
+    if (target) target.focus();
+  }
+
   /** @param {KeyboardEvent} evt */
   #onkeydown(evt) {
-    const direction = this.#direction;
+    const dir = this.#direction;
     switch (evt.key) {
       case "ArrowLeft":
         evt.preventDefault();
-        this.#moveHorizontal(-1);
+        if (dir !== "vertical") this.#moveRow(-1);
         break;
       case "ArrowRight":
         evt.preventDefault();
-        this.#moveHorizontal(1);
+        if (dir !== "vertical") this.#moveRow(+1);
         break;
       case "ArrowUp":
         evt.preventDefault();
-        this.#moveVertical(-1);
+        if (dir === "grid") this.#moveCol(-1);
+        else if (dir !== "horizontal") this.#moveRow(-1);
         break;
       case "ArrowDown":
         evt.preventDefault();
-        this.#moveVertical(1);
+        if (dir === "grid") this.#moveCol(1);
+        else if (dir !== "horizontal") this.#moveRow(1);
         break;
       case "Home":
         evt.preventDefault();
-        if (evt.ctrlKey && direction === "grid") this.#moveVertical(Number.NEGATIVE_INFINITY);
-        this.#moveHorizontal(Number.NEGATIVE_INFINITY);
+        if (evt.ctrlKey && dir === "grid") this.#moveCol(Number.NEGATIVE_INFINITY, false);
+        this.#moveRow(Number.NEGATIVE_INFINITY, false);
         break;
       case "End":
         evt.preventDefault();
-        if (evt.ctrlKey && direction === "grid") this.#moveVertical(Number.POSITIVE_INFINITY);
-        this.#moveHorizontal(Number.POSITIVE_INFINITY);
+        if (evt.ctrlKey && dir === "grid") this.#moveCol(Number.POSITIVE_INFINITY, false);
+        this.#moveRow(Number.POSITIVE_INFINITY, false);
         break;
     }
   }
@@ -128,78 +176,6 @@ export default class RovingTabindex extends HTMLElement {
   /** @param {CustomEvent<{ rows?: number; cols?: number }>} evt */
   #onrove(evt) {
     this.rove(evt.detail);
-  }
-
-  /** @param {number} n */
-  #moveHorizontal(n) {
-    switch (this.#direction) {
-      case "horizontal":
-      case "both": {
-        const last = this.#elements.length - 1;
-        const idx = this.#clamp(this.#focused + n, 0, last);
-
-        const target = this.#elements[idx];
-        if (target) target.focus();
-        break;
-      }
-
-      case "grid": {
-        const last = this.#elements.length - 1;
-        const cols = this.#cols;
-
-        // current position
-        const pos = Math.max(0, Math.min(this.#focused, last));
-        // current row
-        const row = Math.floor(pos / cols);
-
-        // find the row offset
-        const offset = row * cols;
-        // find the next target element within the row
-        const idx = this.#clamp(pos + n, offset, offset + cols - 1);
-        const target = this.#elements[idx];
-        if (target) target.focus();
-        break;
-      }
-
-      case "vertical":
-        break;
-    }
-  }
-
-  /** @param {number} n */
-  #moveVertical(n) {
-    switch (this.#direction) {
-      case "vertical":
-      case "both": {
-        const last = this.#elements.length - 1;
-        const idx = this.#clamp(this.#focused + n, 0, last);
-
-        const target = this.#elements[idx];
-        if (target) target.focus();
-        break;
-      }
-
-      case "grid": {
-        const last = this.#elements.length - 1;
-        const cols = this.#cols;
-
-        // current position
-        const pos = Math.max(0, Math.min(this.#focused, last));
-        // current row
-        const row = Math.floor(pos / cols);
-        // current column
-        const col = pos - row * cols;
-
-        // find the next target element
-        const idx = this.#clamp(row + n, 0, this.#rows - 1) * cols + col;
-        const target = this.#elements[idx];
-        if (target) target.focus();
-        break;
-      }
-
-      case "horizontal":
-        break;
-    }
   }
 
   #collect() {
@@ -247,9 +223,10 @@ export default class RovingTabindex extends HTMLElement {
    * @param {number} n
    * @param {number} min
    * @param {number} max
+   * @param {boolean} [loop]
    */
-  #clamp(n, min, max) {
-    if (!this.hasAttribute("loop")) return Math.max(min, Math.min(n, max));
+  #clamp(n, min, max, loop = this.#loop) {
+    if (!loop) return Math.max(min, Math.min(n, max));
 
     const range = max - min + 1;
     return ((((n - min) % range) + range) % range) + min;

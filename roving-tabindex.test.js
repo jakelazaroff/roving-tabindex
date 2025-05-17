@@ -13,7 +13,6 @@ function keydown(key) {
     ctrlKey: modifier.toLowerCase() === "ctrl",
   });
 
-  console.log(event);
   document.activeElement?.dispatchEvent(event);
 }
 
@@ -106,8 +105,8 @@ describe.sequential("keyboard navigation", () => {
         ["#three", "ArrowDown", "#three", false, "doesn't loop on down"],
         ["#one", "ArrowLeft", "#one", false, "doesn't loop on left"],
         ["#one", "ArrowUp", "#one", false, "doesn't loop on up"],
-        // ["#one", "End", "#three", false, "moves focus to end on end"],
-        // ["#three", "Home", "#one", false, "moves focus to start on home"],
+        ["#one", "End", "#three", false, "moves focus to end on end"],
+        ["#three", "Home", "#one", false, "moves focus to start on home"],
         ["#three", "ArrowRight", "#three", true, "doesn't loop on right"],
         ["#three", "ArrowDown", "#one", true, "loops back to beginning on down"],
         ["#one", "ArrowLeft", "#one", true, "doesn't loop on left"],
@@ -144,8 +143,8 @@ describe.sequential("keyboard navigation", () => {
         ["#c3", "ArrowDown", "#a3", true, "loops back to first row on down"],
         ["#b1", "ArrowLeft", "#b3", true, "loops back to last column on left"],
         ["#a3", "ArrowUp", "#c3", true, "loops back to last row on up"],
-        // ["#b1", "End", "#b3", true, "doesn't loop on end"],
-        // ["#b3", "Home", "#b1", true, "doesn't loop on home"],
+        ["#b1", "End", "#b3", true, "doesn't loop on end"],
+        ["#b3", "Home", "#b1", true, "doesn't loop on home"],
       ],
     },
   ];
