@@ -21,28 +21,28 @@ export default class RovingTabindex extends HTMLElement {
   static #DIRECTIONS = new Set(["vertical", "horizontal", "both", "grid"]);
 
   #observer = new MutationObserver(() => this.#collect());
-  #elements = /** @type {HTMLElement[]} */ ([]);
+  #els = /** @type {HTMLElement[]} */ ([]);
   #focused = -1;
 
   get elements() {
-    return this.#elements;
+    return this.#els;
   }
 
   /** @override */
   focus() {
-    this.#elements[this.#focused]?.focus();
+    this.#els[this.#focused]?.focus();
   }
 
   /** @param {{ rows?: number; cols?: number }} to */
-  rove({ rows, cols }) {
-    if (typeof cols === "number" && Boolean(cols)) this.#moveRow(cols);
-    if (typeof rows === "number" && Boolean(rows)) this.#moveCol(rows);
+  rove({ rows = 0, cols = 0 }) {
+    this.#moveCol(cols);
+    this.#moveRow(rows);
   }
 
   /** @param {Event} evt */
   handleEvent(evt) {
     if (!(evt.target instanceof HTMLElement)) return;
-    if (!new Set(this.#elements).has(evt.target)) return;
+    if (!new Set(this.#els).has(evt.target)) return;
 
     switch (evt.type) {
       case "keydown":
@@ -59,7 +59,7 @@ export default class RovingTabindex extends HTMLElement {
     }
   }
 
-  get #direction() {
+  get #dir() {
     /** @typedef {"horizontal" | "vertical" | "both" | "grid"} Direction */
 
     const dir = this.getAttribute("direction");
@@ -73,12 +73,20 @@ export default class RovingTabindex extends HTMLElement {
   }
 
   get #cols() {
-    const cols = Number(this.getAttribute("columns")) || this.#elements.length;
-    return Math.max(0, Math.min(cols, this.#elements.length));
+    const dir = this.#dir;
+
+    switch (dir) {
+      case "grid":
+        return Number(this.getAttribute("columns")) || this.#els.length;
+      case "vertical":
+        return 1;
+      default:
+        return this.#els.length;
+    }
   }
 
   get #rows() {
-    return Math.floor(this.#elements.length / this.#cols) || 0;
+    return Math.floor(this.#els.length / this.#cols) || 0;
   }
 
   /**
@@ -86,6 +94,8 @@ export default class RovingTabindex extends HTMLElement {
    * @param {boolean} [loop]
    */
   #moveCol(n, loop) {
+    if (n === 0) return;
+
     // number of columns
     const cols = this.#cols,
       // current column
@@ -98,7 +108,7 @@ export default class RovingTabindex extends HTMLElement {
     // target index
     const idx = this.#clamp(this.#focused + n, start, end, loop);
 
-    this.#elements[idx]?.focus();
+    this.#els[idx]?.focus();
   }
 
   /**
@@ -106,6 +116,8 @@ export default class RovingTabindex extends HTMLElement {
    * @param {boolean} [loop]
    */
   #moveRow(n, loop) {
+    if (n === 0) return;
+
     // number of columns
     const cols = this.#cols,
       // number of rows
@@ -113,17 +125,17 @@ export default class RovingTabindex extends HTMLElement {
       // current column
       col = this.#focused % cols,
       // current row
-      row = Math.floor(this.#focused / rows);
+      row = Math.floor(this.#focused / cols);
 
     // target index
     const idx = col + this.#clamp(row + n, 0, rows - 1, loop) * cols;
 
-    this.#elements[idx]?.focus();
+    this.#els[idx]?.focus();
   }
 
   /** @param {KeyboardEvent} ev */
   #onkeydown(ev) {
-    const dir = this.#direction;
+    const dir = this.#dir;
     switch (ev.key) {
       case "ArrowLeft":
         ev.preventDefault();
@@ -135,23 +147,25 @@ export default class RovingTabindex extends HTMLElement {
         break;
       case "ArrowUp":
         ev.preventDefault();
-        if (dir === "grid") this.#moveRow(-1);
-        else if (dir !== "horizontal") this.#moveCol(-1);
+        if (dir === "both") this.#moveCol(-1);
+        else if (dir !== "horizontal") this.#moveRow(-1);
         break;
       case "ArrowDown":
         ev.preventDefault();
-        if (dir === "grid") this.#moveRow(1);
-        else if (dir !== "horizontal") this.#moveCol(1);
+        if (dir === "both") this.#moveCol(1);
+        else if (dir !== "horizontal") this.#moveRow(1);
         break;
       case "Home":
         ev.preventDefault();
         this.#moveCol(Number.NEGATIVE_INFINITY, false);
-        if (ev.ctrlKey && dir === "grid") this.#moveRow(Number.NEGATIVE_INFINITY, false);
+        if (dir === "vertical" || (ev.ctrlKey && dir === "grid"))
+          this.#moveRow(Number.NEGATIVE_INFINITY, false);
         break;
       case "End":
         ev.preventDefault();
         this.#moveCol(Number.POSITIVE_INFINITY, false);
-        if (ev.ctrlKey && dir === "grid") this.#moveRow(Number.POSITIVE_INFINITY, false);
+        if (dir === "vertical" || (ev.ctrlKey && dir === "grid"))
+          this.#moveRow(Number.POSITIVE_INFINITY, false);
         break;
     }
   }
@@ -160,10 +174,10 @@ export default class RovingTabindex extends HTMLElement {
   #onfocusin(ev) {
     if (!(ev.target instanceof HTMLElement)) return;
 
-    const idx = this.#elements.slice().indexOf(ev.target);
+    const idx = this.#els.slice().indexOf(ev.target);
     if (idx === -1) return;
 
-    for (const el of this.#elements) {
+    for (const el of this.#els) {
       el.tabIndex = -1;
     }
 
@@ -178,20 +192,20 @@ export default class RovingTabindex extends HTMLElement {
 
   #collect() {
     // remove tabindex from all the elements
-    for (const el of this.#elements) {
+    for (const el of this.#els) {
       el.removeAttribute("tabindex");
     }
 
     // get the last element that had focus
     /** @type {HTMLElement | undefined} */
-    let focused = this.#elements[this.#focused];
+    let focused = this.#els[this.#focused];
 
     // get the new set of elements
     const selector = this.getAttribute("selector") || ":root";
-    this.#elements = /** @type {HTMLElement[]} */ ([...this.querySelectorAll(selector)]);
+    this.#els = /** @type {HTMLElement[]} */ ([...this.querySelectorAll(selector)]);
 
     // if the new set of elements no longer has the focused element, don't use it
-    const els = new Set(this.#elements);
+    const els = new Set(this.#els);
     if (focused && !els.has(focused)) focused = undefined;
 
     // if the element that currently has focus is in the new set of elements, use that instead
@@ -199,18 +213,16 @@ export default class RovingTabindex extends HTMLElement {
     if (els.has(active)) focused = active;
 
     // if neither the previously focused nor active element is in the new set, try to find an element with data-tabindex-0
-    if (!focused) focused = this.#elements.find((el) => "tabindex-0" in el.dataset);
+    if (!focused) focused = this.#els.find((el) => "tabindex-0" in el.dataset);
 
     // if there is *still* no focused element, use the first element in the new set
-    if (!focused) focused = this.#elements[0];
+    if (!focused) focused = this.#els[0];
 
     // update the index of the focused element
-    this.#focused = focused ? this.#elements.slice().indexOf(focused) : -1;
+    this.#focused = focused ? this.#els.slice().indexOf(focused) : -1;
 
     // update the tabindex of the elements
-    for (const el of this.#elements) {
-      el.tabIndex = -1;
-    }
+    for (const el of this.#els) el.tabIndex = -1;
 
     // set the tabindex of the focused element to 0
     if (focused) focused.tabIndex = 0;
@@ -248,7 +260,7 @@ export default class RovingTabindex extends HTMLElement {
     this.removeEventListener("rove", this);
 
     // remove tabindex from all the elements
-    for (const el of this.#elements) {
+    for (const el of this.#els) {
       el.removeAttribute("tabIndex");
     }
 

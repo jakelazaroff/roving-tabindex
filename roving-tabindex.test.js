@@ -2,24 +2,62 @@ import { beforeEach, describe, expect, test } from "vitest";
 
 import RovingTabindex from "./roving-tabindex.js";
 
-/** @param {string} key */
-function keydown(key) {
-  let [modifier = "", press = ""] = key.split("+");
-  if (!press) press = modifier;
-
-  const event = new KeyboardEvent("keydown", {
-    bubbles: true,
-    key: press,
-    ctrlKey: modifier.toLowerCase() === "ctrl",
-  });
-
-  document.activeElement?.dispatchEvent(event);
-}
-
 /** @param {RovingTabindex} rt */
 function checkTabIndices(rt) {
   for (const el of rt.elements) expect(el.tabIndex).toBe(el === document.activeElement ? 0 : -1);
 }
+
+describe.sequential(".rove", () => {
+  /** @type {RovingTabindex} */
+  let rt,
+    /** @type {HTMLElement} */
+    one,
+    /** @type {HTMLElement} */
+    two,
+    /** @type {HTMLElement} */
+    three;
+  beforeEach(() => {
+    document.body.innerHTML = `
+    <roving-tabindex selector="button">
+      <button id="one">one</button>
+      <button id="two">two</button>
+      <button id="three">three</button>
+    </roving-tabindex>
+  `;
+
+    rt = /** @type {RovingTabindex} */ (document.querySelector("roving-tabindex"));
+    one = /** @type {HTMLElement} */ (document.querySelector("#one"));
+    two = /** @type {HTMLElement} */ (document.querySelector("#two"));
+    three = /** @type {HTMLElement} */ (document.querySelector("#three"));
+  });
+
+  test("moves by column", () => {
+    one.focus();
+    rt.rove({ cols: 1 });
+    expect(document.activeElement).toBe(two);
+
+    rt.rove({ cols: -1 });
+    expect(document.activeElement).toBe(one);
+  });
+
+  test("moves by row", () => {
+    rt.setAttribute("direction", "vertical");
+
+    one.focus();
+    rt.rove({ rows: 1 });
+    expect(document.activeElement).toBe(two);
+
+    rt.rove({ rows: -1 });
+    expect(document.activeElement).toBe(one);
+  });
+
+  test.skip("skips disabled elements", () => {
+    one.focus();
+    two.setAttribute("disabled", "");
+    rt.rove({ cols: 1 });
+    expect(document.activeElement).toBe(three);
+  });
+});
 
 describe.sequential("keyboard navigation", () => {
   /**
@@ -29,10 +67,24 @@ describe.sequential("keyboard navigation", () => {
    * @property {[start: string, key: string, end: string, loop: boolean, msg: string][]} tests
    */
 
+  /** @param {string} key */
+  function keydown(key) {
+    let [modifier = "", press = ""] = key.split("+");
+    if (!press) press = modifier;
+
+    const event = new KeyboardEvent("keydown", {
+      bubbles: true,
+      key: press,
+      ctrlKey: modifier.toLowerCase() === "ctrl",
+    });
+
+    document.activeElement?.dispatchEvent(event);
+  }
+
   /** @type {Suite[]} */
   const suites = [
     {
-      dir: "both",
+      dir: "[direction=both]",
       html: `
         <roving-tabindex selector="button">
           <button id="one">one</button>
@@ -60,9 +112,9 @@ describe.sequential("keyboard navigation", () => {
       ],
     },
     {
-      dir: "horizontal",
+      dir: "[direction=horizontal]",
       html: `
-        <roving-tabindex selector="button">
+        <roving-tabindex selector="button" direction="horizontal">
           <button id="one">one</button>
           <button id="two">two</button>
           <button id="three">three</button>
@@ -88,9 +140,9 @@ describe.sequential("keyboard navigation", () => {
       ],
     },
     {
-      dir: "vertical",
+      dir: "[direction=vertical]",
       html: `
-        <roving-tabindex selector="button">
+        <roving-tabindex selector="button" direction="vertical">
           <button id="one">one</button>
           <button id="two">two</button>
           <button id="three">three</button>
@@ -116,9 +168,9 @@ describe.sequential("keyboard navigation", () => {
       ],
     },
     {
-      dir: "grid",
+      dir: "[direction=grid]",
       html: `
-        <roving-tabindex selector="button" columns="3">
+        <roving-tabindex selector="button" columns="3" direction="grid">
           <button id="a1">a1</button>
           <button id="a2">a2</button>
           <button id="a3">a3</button>
@@ -156,7 +208,6 @@ describe.sequential("keyboard navigation", () => {
       beforeEach(() => {
         document.body.innerHTML = suite.html;
         rt = /** @type {RovingTabindex} */ (document.querySelector("roving-tabindex"));
-        rt.setAttribute("direction", suite.dir);
       });
 
       for (const [start, key, end, loop, message] of suite.tests) {
