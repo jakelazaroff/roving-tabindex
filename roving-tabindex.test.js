@@ -51,11 +51,22 @@ describe.sequential(".rove", () => {
     expect(document.activeElement).toBe(one);
   });
 
-  test.skip("skips disabled elements", () => {
-    one.focus();
+  test("skips disabled elements", () => {
     two.setAttribute("disabled", "");
+    one.focus();
+
     rt.rove({ cols: 1 });
     expect(document.activeElement).toBe(three);
+
+    rt.rove({ cols: -1 });
+    expect(document.activeElement).toBe(one);
+
+    rt.setAttribute("direction", "vertical");
+    rt.rove({ rows: 1 });
+    expect(document.activeElement).toBe(three);
+
+    rt.rove({ rows: -1 });
+    expect(document.activeElement).toBe(one);
   });
 });
 

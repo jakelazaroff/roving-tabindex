@@ -89,6 +89,14 @@ export default class RovingTabindex extends HTMLElement {
     return Math.floor(this.#els.length / this.#cols) || 0;
   }
 
+  get #col() {
+    return this.#focused % this.#cols;
+  }
+
+  get #row() {
+    return Math.floor(this.#focused / this.#cols);
+  }
+
   /**
    * @param {number} n
    * @param {boolean} [loop]
@@ -96,19 +104,26 @@ export default class RovingTabindex extends HTMLElement {
   #moveCol(n, loop) {
     if (n === 0) return;
 
-    // number of columns
-    const cols = this.#cols,
-      // current column
-      col = this.#focused % cols,
-      // first column of current row
-      start = this.#focused - col,
-      // last column of current row
-      end = start + this.#cols - 1;
+    const start = this.#focused - this.#col,
+      end = start + this.#cols;
 
-    // target index
-    const idx = this.#clamp(this.#focused + n, start, end, loop);
+    let idx = this.#clamp(this.#focused + n, start, end - 1, loop);
+    let looped = !loop;
+    let el = this.#els[idx];
+    el?.focus();
 
-    this.#els[idx]?.focus();
+    while (document.activeElement !== el) {
+      if (start < idx && idx < end - 1) idx += Math.sign(n);
+      else if (looped) return;
+      else {
+        looped = true;
+        idx = idx < start ? end - 1 : start;
+      }
+
+      el = this.#els[idx];
+      el?.focus();
+      console.log("WHILE", document.activeElement, { start, end, idx, looped, el });
+    }
   }
 
   /**
@@ -120,17 +135,27 @@ export default class RovingTabindex extends HTMLElement {
 
     // number of columns
     const cols = this.#cols,
-      // number of rows
-      rows = this.#rows,
-      // current column
-      col = this.#focused % cols,
-      // current row
-      row = Math.floor(this.#focused / cols);
+      // current column in first row
+      start = this.#col,
+      // current column in last row
+      end = this.#rows * cols + start;
 
-    // target index
-    const idx = col + this.#clamp(row + n, 0, rows - 1, loop) * cols;
+    let idx = this.#clamp(this.#focused + n * cols, start, end - 1, loop);
+    let looped = !loop;
+    let el = this.#els[idx];
+    el?.focus();
 
-    this.#els[idx]?.focus();
+    while (document.activeElement !== el) {
+      if (start < idx && idx < end) idx += Math.sign(n) * cols;
+      else if (looped) return;
+      else {
+        looped = true;
+        idx = idx < start ? end - 1 : start;
+      }
+
+      el = this.#els[idx];
+      el?.focus();
+    }
   }
 
   /** @param {KeyboardEvent} ev */
@@ -139,33 +164,32 @@ export default class RovingTabindex extends HTMLElement {
     switch (ev.key) {
       case "ArrowLeft":
         ev.preventDefault();
-        if (dir !== "vertical") this.#moveCol(-1);
+        if (dir !== "vertical") this.#moveCol(-1, this.#loop);
         break;
       case "ArrowRight":
         ev.preventDefault();
-        if (dir !== "vertical") this.#moveCol(+1);
+        if (dir !== "vertical") this.#moveCol(1, this.#loop);
         break;
       case "ArrowUp":
         ev.preventDefault();
-        if (dir === "both") this.#moveCol(-1);
-        else if (dir !== "horizontal") this.#moveRow(-1);
+        if (dir === "both") this.#moveCol(-1, this.#loop);
+        else if (dir !== "horizontal") this.#moveRow(-1, this.#loop);
         break;
       case "ArrowDown":
         ev.preventDefault();
-        if (dir === "both") this.#moveCol(1);
-        else if (dir !== "horizontal") this.#moveRow(1);
+        if (dir === "both") this.#moveCol(1, this.#loop);
+        else if (dir !== "horizontal") this.#moveRow(1, this.#loop);
         break;
       case "Home":
         ev.preventDefault();
-        this.#moveCol(Number.NEGATIVE_INFINITY, false);
-        if (dir === "vertical" || (ev.ctrlKey && dir === "grid"))
-          this.#moveRow(Number.NEGATIVE_INFINITY, false);
+        this.#moveCol(-this.#col, false);
+        if (dir === "vertical" || (ev.ctrlKey && dir === "grid")) this.#moveRow(-this.#row, false);
         break;
       case "End":
         ev.preventDefault();
-        this.#moveCol(Number.POSITIVE_INFINITY, false);
+        this.#moveCol(this.#cols - 1 - this.#col, false);
         if (dir === "vertical" || (ev.ctrlKey && dir === "grid"))
-          this.#moveRow(Number.POSITIVE_INFINITY, false);
+          this.#moveRow(this.#rows - 1 - this.#row, false);
         break;
     }
   }
