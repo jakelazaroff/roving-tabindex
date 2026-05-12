@@ -122,7 +122,6 @@ export default class RovingTabindex extends HTMLElement {
 
       el = this.#els[idx];
       el?.focus();
-      console.log("WHILE", document.activeElement, { start, end, idx, looped, el });
     }
   }
 
